@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="GraphBin2_Logo.png" width="500" title="GraphBin2 Logo" alt="GraphBin2 Logo">
+  <img src="GraphBin2_Logo.png" width="450" title="GraphBin2 Logo" alt="GraphBin2 Logo">
 </p>
 
 # GraphBin2: Refined and Overlapped Binning of Metagenomic Contigs Using Assembly Graphs
