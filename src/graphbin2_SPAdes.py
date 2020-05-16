@@ -27,6 +27,7 @@ ap.add_argument("--paths", required=True, help="path to the contigs.paths file")
 ap.add_argument("--binned", required=True, help="path to the .csv file with the initial binning output from an existing tool")
 ap.add_argument("--output", required=True, help="path to the output folder")
 ap.add_argument("--prefix", required=False, default='', help="prefix for the output file")
+ap.add_argument("--depth", required=False, type=int, default=5, help="maximum depth for the breadth-first-search. [default: 5]")
 ap.add_argument("--threshold", required=False, type=float, default=1.5, help="threshold for determining inconsistent vertices. [default: 1.5]")
 ap.add_argument("--nthreads", required=False, type=int, default=8, help="number of threads to use. [default: 8]")
 
@@ -38,19 +39,21 @@ contig_paths = args["paths"]
 contig_bins_file = args["binned"]
 output_path = args["output"]
 prefix = args["prefix"]
+depth = args["depth"]
 threshold = args["threshold"]
 nthreads = args["nthreads"]
 
 n_bins = 0
 
 print("\nWelcome to GraphBin2: Refined and Overlapped Binning of Metagenomic Contigs using Assembly Graphs.")
-print("This version of GraphBin makes use of the assembly graph produced by SPAdes which is based on the de Bruijn graph approach.")
+print("This version of GraphBin2 makes use of the assembly graph produced by SPAdes which is based on the de Bruijn graph approach.")
 
 print("\nInput arguments:", contigs_file)
 print("Assembly graph file:", assembly_graph_file)
 print("Contig paths file:", contig_paths)
 print("Existing binning output file:", contig_bins_file)
 print("Final binning output file:", output_path)
+print("Depth:", depth)
 print("Threshold:", threshold)
 print("Number of threads:", nthreads)
 
@@ -98,6 +101,12 @@ if args["prefix"] != '':
         prefix = args["prefix"]+"_"
 else:
     prefix = ''
+
+# Validate depth
+if depth < 1:
+    print("\nPlease enter a valid number for depth")
+    print("Exiting GraphBin2...\nBye...!\n")
+    sys.exit(1)
 
 # Validate threshold
 if threshold < 1.0:
@@ -264,7 +273,7 @@ try:
     bins_list.sort()
 
     n_bins = len(bins_list)
-    print("\nNumber of bins available in binning result:", n_bins)
+    print("Number of bins available in binning result:", n_bins)
 except:
     print("\nPlease make sure that the correct path to the binning result file is provided and it is having the correct format")
     print("Exiting GraphBin... Bye...!")
@@ -370,7 +379,7 @@ print("\nNumber of non-isolated contigs:", len(non_isolated))
 # The BFS function to search labelled nodes
 #-----------------------------------------------------
 
-def runBFS(node, threhold=5):
+def runBFS(node, threhold=depth):
     queue = []
     visited = set()
     queue.append(node)
@@ -581,7 +590,7 @@ for contig in binned_contigs:
 
 
 sorted_node_list = []
-sorted_node_list_ = [list(runBFS(x, threhold=3)) for x in contigs_to_bin]
+sorted_node_list_ = [list(runBFS(x, threhold=depth)) for x in contigs_to_bin]
 sorted_node_list_ = [item for sublist in sorted_node_list_ for item in sublist]
 
 for data in sorted_node_list_:
@@ -605,7 +614,7 @@ while sorted_node_list:
         heapq.heapify(sorted_node_list)
     
         for n in unbinned_neighbours:
-            candidates = list(runBFS(n, threhold=3))
+            candidates = list(runBFS(n, threhold=depth))
             for c in candidates:
                 heapq.heappush(sorted_node_list, DataWrap(c))
 
@@ -740,7 +749,7 @@ for i in range(node_count):
             line.append(k+1)
             output_bins.append(line)
 
-output_file = output_path + 'graphbin2_output.csv'
+output_file = output_path + prefix + 'graphbin2_output.csv'
 
 with open(output_file, mode='w') as output_file:
     output_writer = csv.writer(output_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
