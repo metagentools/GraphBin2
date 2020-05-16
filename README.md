@@ -126,6 +126,28 @@ python graphbin_SPAdes.py --contigs /path/to/contigs.fasta --graph /path/to/grap
 python graphbin_SGA.py --contigs /path/to/contigs.fa --abundance /path/to/abundance.tsv --graph /path/to/graph_file.asqg --binned /path/to/binning_result.csv --output /path/to/output_folder
 ```
 
+## Visualization of the metaSPAdes Assembly Graph of the Sim-5G Dataset
+
+### Initial Binning Result
+<p align="center">
+  <img src="images/initial_binning_result.svg" width="500" title="Initial assembly graph" alt="Initial binning result">
+</p>
+
+### Assembly Graph with Refined Labels
+<p align="center">
+  <img src="images/label_refined.svg" width="500" title="Initial assembly graph" alt="Labels refined">
+</p>
+
+### Assembly Graph after Label Propagation
+<p align="center">
+  <img src="images/label_propagated.svg" width="500" title="Initial assembly graph" alt="Labels propagated">
+</p>
+
+### Assembly Graph with Multi-labelled Vertices
+<p align="center">
+  <img src="images/multiple_marked.svg" width="500" title="Initial assembly graph" alt="Multi-labelled">
+</p>
+
 ## References
 
 [1] Barnum, T.P., _et al._: Genome-resolved metagenomics identifies genetic mobility, metabolic interactions, and unexpected diversity in perchlorate-reducing communities. The ISME Journal 12, 1568-1581 (2018)
