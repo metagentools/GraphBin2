@@ -1,14 +1,14 @@
+#!/usr/bin/python3
 
-import sys, getopt
+import sys
 import csv
-import operator
 import time
 import argparse
 import re
 import heapq
 import itertools as it
-from multiprocessing import Pool
 
+from multiprocessing import Pool
 from Bio import SeqIO
 from igraph import *
 from collections import defaultdict
