@@ -11,6 +11,11 @@ GraphBin2 is an extension of [GraphBin](https://github.com/Vini2/GraphBin) which
 
 ## Getting Started
 
+### Dependencies
+You will need the following python packages installed.
+* [Biopython](https://biopython.org/)
+* [python-igraph](https://igraph.org/python/)
+
 ### Downloading GraphBin2
 You can download the latest release of GraphBin from [Releases](https://github.com/Vini2/GraphBin/releases) or clone the GraphBin repository to your machine.
 
@@ -27,7 +32,7 @@ unzip [file_name].zip
 Now go in to the GraphBin folder using the command
 
 ```
-cd GraphBin/src/
+cd GraphBin2/src/
 ```
 
 ## Using GraphBin2
