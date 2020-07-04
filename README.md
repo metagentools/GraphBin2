@@ -36,14 +36,14 @@ cd GraphBin2/src/
 ```
 
 ## Using GraphBin2
-You can see the usage options of GraphBin by typing ```python graphbin2_SPAdes.py -h``` or ```python graphbin2_SGA.py -h``` on the command line. For example,
+You can see the usage options of GraphBin by typing ```python graphbin2.py -h``` on the command line. For example,
 
 ```
-python graphbin2_SPAdes.py -h
-usage: graphbin2_SPAdes.py [-h] --contigs CONTIGS --graph GRAPH --paths PATHS
-                           --binned BINNED --output OUTPUT [--prefix PREFIX]
-                           [--depth DEPTH] [--threshold THRESHOLD]
-                           [--nthreads NTHREADS]
+python graphbin2.py -h
+usage: graphbin2.py [-h] --assembler ASSEMBLER --graph GRAPH --contigs CONTIGS
+                    [--paths PATHS] [--abundance ABUNDANCE] --binned BINNED
+                    --output OUTPUT [--prefix PREFIX] [--depth DEPTH]
+                    [--threshold THRESHOLD] [--nthreads NTHREADS]
 
 GraphBin2 Help. GraphBin2 is a tool which refines the binning results obtained
 from existing tools and, more importantly, is able to assign contigs to
@@ -53,43 +53,19 @@ contigs shared by multiple species.
 
 optional arguments:
   -h, --help            show this help message and exit
-  --contigs CONTIGS     path to the contigs file
+  --assembler ASSEMBLER
+                        name of the assembler used (SPAdes or SGA)
   --graph GRAPH         path to the assembly graph file
-  --paths PATHS         path to the contigs.paths file
-  --binned BINNED       path to the .csv file with the initial binning output
-                        from an existing tool
-  --output OUTPUT       path to the output folder
-  --prefix PREFIX       prefix for the output file
-  --depth DEPTH         maximum depth for the breadth-first-search. [default: 5]
-  --threshold THRESHOLD
-                        threshold for determining inconsistent vertices.
-                        [default: 1.5]
-  --nthreads NTHREADS   number of threads to use. [default: 8]
-```
-```
-python graphbin2_SGA.py -h
-usage: graphbin2_SGA.py [-h] --contigs CONTIGS --abundance ABUNDANCE --graph
-                        GRAPH --binned BINNED --output OUTPUT
-                        [--prefix PREFIX] [--depth DEPTH]
-                        [--threshold THRESHOLD] [--nthreads NTHREADS]
-
-GraphBin2 Help. GraphBin2 is a tool which refines the binning results obtained
-from existing tools and, more importantly, is able to assign contigs to
-multiple bins. GraphBin2 uses the connectivity and coverage information from
-assembly graphs to adjust existing binning results on contigs and to infer
-contigs shared by multiple species.
-
-optional arguments:
-  -h, --help            show this help message and exit
   --contigs CONTIGS     path to the contigs file
+  --paths PATHS         path to the contigs.paths file
   --abundance ABUNDANCE
                         path to the abundance file
-  --graph GRAPH         path to the assembly graph file
   --binned BINNED       path to the .csv file with the initial binning output
                         from an existing tool
   --output OUTPUT       path to the output folder
   --prefix PREFIX       prefix for the output file
-  --depth DEPTH         maximum depth for the breadth-first-search. [default: 5]
+  --depth DEPTH         maximum depth for the breadth-first-search. [default:
+                        5]
   --threshold THRESHOLD
                         threshold for determining inconsistent vertices.
                         [default: 1.5]
@@ -98,13 +74,13 @@ optional arguments:
 
 ## Input Format
 
-For the SPAdes version, `graphbin_SPAdes.py` takes in 4 files as inputs (required).
+For the SPAdes version of `graphbin2.py` takes in 4 files as inputs (required).
 * Contigs file (in `.fasta` format)
 * Assembly graph file (in `.gfa` format)
 * Paths of contigs (in `.paths` format)
 * Binning output from an existing tool (in `.csv` format)
 
-For the SGA version, `graphbin_SGA.py` takes in 4 files as inputs (required).
+For the SGA version of `graphbin2.py` takes in 4 files as inputs (required).
 * Contigs file (in `.fasta` format)
 * Abundance file (tab separated file with contig number and coverage in each line)
 * Assembly graph file (in `.asqg` format)
@@ -125,10 +101,10 @@ Example binned input
 ## Example Usage
 
 ```
-python graphbin_SPAdes.py --contigs /path/to/contigs.fasta --graph /path/to/graph_file.gfa --paths /path/to/paths_file.paths --binned /path/to/binning_result.csv --output /path/to/output_folder
+python graphbin2.py --assembler spades --contigs /path/to/contigs.fasta --graph /path/to/graph_file.gfa --paths /path/to/paths_file.paths --binned /path/to/binning_result.csv --output /path/to/output_folder
 ```
 ```
-python graphbin_SGA.py --contigs /path/to/contigs.fa --abundance /path/to/abundance.tsv --graph /path/to/graph_file.asqg --binned /path/to/binning_result.csv --output /path/to/output_folder
+python graphbin2.py --assembler sga --contigs /path/to/contigs.fa --abundance /path/to/abundance.tsv --graph /path/to/graph_file.asqg --binned /path/to/binning_result.csv --output /path/to/output_folder
 ```
 
 ## Visualization of the metaSPAdes Assembly Graph of the Sim-5G Dataset
