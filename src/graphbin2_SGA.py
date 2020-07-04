@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 import sys
 import csv
@@ -55,71 +55,6 @@ print("Final binning output file:", output_path)
 print("Depth:", depth)
 print("Threshold:", threshold)
 print("Number of threads:", nthreads)
-
-
-# Validation of inputs
-#---------------------------------------------------
-
-# Check contigs file
-if not os.path.isfile(contigs_file):
-    print("\nFailed to open the contigs.fasta file.")
-    print("Exiting GraphBin2...\nBye...!\n")
-    sys.exit(1)
-
-# Check contigs file
-if not os.path.isfile(abundance_file):
-    print("\nFailed to open the abundance file.")
-    print("Exiting GraphBin2...\nBye...!\n")
-    sys.exit(1)
-
-# Check assembly graph file
-if not os.path.isfile(assembly_graph_file):
-    print("\nFailed to open the assembly graph file.")
-    print("Exiting GraphBin2...\nBye...!\n")
-    sys.exit(1)
-
-# Check the file with the initial binning output
-if not os.path.isfile(contig_bins_file):
-    print("\nFailed to open the file with the initial binning output.")
-    print("Exiting GraphBin2...\nBye...!\n")
-    sys.exit(1)
-
-# Handle for missing trailing forwardslash in output folder path
-if output_path[-1:] != "/":
-    output_path = output_path + "/"
-
-# Create output folder if it does not exist
-if not os.path.isdir(output_path):
-    subprocess.run("mkdir -p "+output_path, shell=True)
-
-# Validate prefix
-if args["prefix"] != '':
-    if args["prefix"].endswith("_"):
-        prefix = args["prefix"]
-    else:
-        prefix = args["prefix"]+"_"
-else:
-    prefix = ''
-
-# Validate depth
-if depth < 1:
-    print("\nPlease enter a valid number for depth")
-    print("Exiting GraphBin2...\nBye...!\n")
-    sys.exit(1)
-
-# Validate threshold
-if threshold < 1.0:
-    print("\nPlease enter a valid number for threshold")
-    print("Exiting GraphBin2...\nBye...!\n")
-    sys.exit(1)
-
-# Validate number of threads
-if args["nthreads"] <= 0:
-    print("\nPlease enter a valid number for the number of threads")
-    print("Exiting GraphBin2...\nBye...!\n")
-    sys.exit(1)
-
-
 
 print("\nGraphBin2 started\n-------------------")
 
