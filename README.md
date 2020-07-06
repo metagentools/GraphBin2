@@ -82,7 +82,7 @@ For the SPAdes version of `graphbin2.py` takes in 4 files as inputs (required).
 
 For the SGA version of `graphbin2.py` takes in 4 files as inputs (required).
 * Contigs file (in `.fasta` format)
-* Abundance file (tab separated file with contig number and coverage in each line)
+* Abundance file (tab separated file with contig ID and coverage in each line)
 * Assembly graph file (in `.asqg` format)
 * Binning output from an existing tool (in `.csv` format)
 
