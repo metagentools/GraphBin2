@@ -43,11 +43,11 @@ Firstly, you will have to assemble your set of reads into contigs. For this purp
 [**SPAdes**](http://cab.spbu.ru/software/spades/) is an assembler based on the de Bruijn graph approach. [**metaSPAdes**](https://genome.cshlp.org/content/27/5/824) is the dedicated metagenomic assembler of SPAdes. Use metaSPAdes (SPAdes in metagenomics mode) software to assemble reads into contigs. A sample command is given below.
 
 ```
-spades --meta -1 Reads_1.fastq -2 Reads_2.fastq -o /path/output_folder -t 8
+spades --meta -1 Reads_1.fastq -2 Reads_2.fastq -o /path/output_folder -t 16
 ```
 
 ### SGA
-[**SGA**](https://github.com/jts/sga) (String Graph Assembler) is an assembler based on the overlap-layout-consensus (more recently string graph) approach. Use SGA software to assemble reads into contigs. Sample commands are given below.
+[**SGA**](https://github.com/jts/sga) (String Graph Assembler) is an assembler based on the overlap-layout-consensus (more recently string graph) approach. Use SGA software to assemble reads into contigs. Sample commands are given below. You may change the parameters to suit your datasets.
 
 ```
 sga preprocess -o reads.fastq --pe-mode 1 Reads_1.fastq Reads_2.fastq
@@ -65,7 +65,7 @@ Next, you have to bin the resulting contigs using an existing contig-binning too
 #### [MaxBin2](https://sourceforge.net/projects/maxbin2/)
 
 ```
-perl MaxBin-2.2.5/run_MaxBin.pl -contig contigs.fasta -abund abundance.abund -out /path/output_folder
+perl MaxBin-2.2.5/run_MaxBin.pl -contig contigs.fasta -abund abundance.abund -thread 8 -out /path/output_folder
 ```
 
 #### [SolidBin](https://github.com/sufforest/SolidBin)
