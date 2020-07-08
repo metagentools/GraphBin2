@@ -73,7 +73,7 @@ perl MaxBin-2.2.5/run_MaxBin.pl -contig contigs.fasta -abund abundance.abund -th
 ```
 python scripts/gen_kmer.py /path/to/data/contig.fasta 1000 4 
 sh gen_cov.sh 
-python SolidBin.py --contig_file /path/to/contigs.fasta --composition_profiles /path/to/kmer_4.csv --coverage_profiles /path/to/cov_inputtableR.tsv --output /output/result.tsv --log /output/log.txt --use\_sfs
+python SolidBin.py --contig_file /path/to/contigs.fasta --composition_profiles /path/to/kmer_4.csv --coverage_profiles /path/to/cov_inputtableR.tsv --output /output/result.tsv --log /output/log.txt --use_sfs
 ```
 
 ## Using GraphBin2
