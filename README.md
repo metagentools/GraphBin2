@@ -127,7 +127,7 @@ For the SGA version of `graphbin2.py` takes in 4 files as inputs (required).
 * Assembly graph file (in `.asqg` format)
 * Binning output from an existing tool (in `.csv` format)
 
-**Note:** abundance.abund is a tab separated file with contig ID and the coverage for each contig in the assembly. metaSPAdes provides the coverage of each contig in the contig identifier of the final assembly. We can directly extract these values to create the abundance.abund file. However, no such information is provided for contigs produced by SGA. Hence, reads should be aligned back to contigs in order to determine the coverage of SGA contigs.
+**Note:** abundance.abund is a tab separated file with contig ID and the coverage for each contig in the assembly. metaSPAdes provides the coverage of each contig in the contig identifier of the final assembly. We can directly extract these values to create the abundance.abund file. However, no such information is provided for contigs produced by SGA. Hence, reads should be mapped back to the assembled contigs in order to determine the coverage of SGA contigs.
 
 **Note:** The binning output file should have comma separated values ```(contig_number, bin_number)``` for each contig. The contents of the binning output file should look similar to the example given below. Contigs are named according to their number starting from 0 and the numbering of bins starts from 1.
 
