@@ -35,6 +35,47 @@ Now go in to the GraphBin folder using the command
 cd GraphBin2/src/
 ```
 
+## Preprocessing
+
+Firstly, you will have to assemble your set of reads into contigs. For this purpose, you can use metaSPAdes or SGA.
+
+### metaSPAdes
+[**SPAdes**](http://cab.spbu.ru/software/spades/) is an assembler based on the de Bruijn graph approach. [**metaSPAdes**](https://genome.cshlp.org/content/27/5/824) is the dedicated metagenomic assembler of SPAdes. Use metaSPAdes (SPAdes in metagenomics mode) software to assemble reads into contigs. A sample command is given below.
+
+```
+spades --meta -1 Reads_1.fastq -2 Reads_2.fastq -o /path/output_folder -t 8
+```
+
+### SGA
+[**SGA**](https://github.com/jts/sga) (String Graph Assembler) is an assembler based on the overlap-layout-consensus (more recently string graph) approach. Use SGA software to assemble reads into contigs. Sample commands are given below.
+
+```
+sga preprocess -o reads.fastq --pe-mode 1 Reads_1.fastq Reads_2.fastq
+sga index -a ropebwt -t 16 --no-reverse reads.fastq
+sga correct -k 41 --learn -t 16 -o reads.k41.fastq reads.fastq
+sga index -a ropebwt -t 16 reads.k41.fastq
+sga filter -x 2 -t 16 reads.k41.fastq
+sga fm-merge -m 45 -t 16  reads.k41.filter.pass.fa
+sga index -t 16 reads.k41.filter.pass.merged.fa
+sga overlap -m 55 -t 16 reads.k41.filter.pass.merged.fa
+sga assemble -m 95 reads.k41.filter.pass.merged.asqg.gz
+```
+Next, you have to bin the resulting contigs using an existing contig-binning tool. We have used the following tools with their commands for the experiments.
+
+#### [MaxBin2](https://sourceforge.net/projects/maxbin2/)
+
+```
+perl MaxBin-2.2.5/run_MaxBin.pl -contig contigs.fasta -abund abundance.abund -out /path/output_folder
+```
+
+#### [SolidBin](https://github.com/sufforest/SolidBin)
+
+```
+python scripts/gen_kmer.py /path/to/data/contig.fasta 1000 4 
+sh gen_cov.sh 
+python SolidBin.py --contig_file /path/to/contigs.fasta --composition_profiles /path/to/kmer_4.csv --coverage_profiles /path/to/cov_inputtableR.tsv --output /output/result.tsv --log /output/log.txt --use\_sfs
+```
+
 ## Using GraphBin2
 You can see the usage options of GraphBin by typing ```python graphbin2.py -h``` on the command line. For example,
 
