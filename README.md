@@ -190,3 +190,7 @@ python graphbin2.py --assembler sga --contigs /path/to/contigs.fa --abundance /p
 
 ## Citation
 GraphBin2 has been accepted for publication at the 20th International Workshop on Algorithms in Bioinformatics (WABI 2020).
+
+If you use GraphBin2 in your work, please cite GraphBin2 as,
+
+Vijini Mallawaarachchi, Anuradha Wickramarachchi, Yu Lin. GraphBin2: Refined and Overlapped Binning of Metagenomic Contigs using Assembly Graphs. Procedings of the 20th International Workshop on Algorithms in Bioinformatics (WABI 2020) in Leibniz International Proceedings in Informatics, Article No. 8; pp. 8:1–8:21, June 2020, DOI: 10.4230/LIPIcs.WABI.2020.8
