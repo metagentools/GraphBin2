@@ -187,3 +187,6 @@ python graphbin2.py --assembler sga --contigs /path/to/contigs.fa --abundance /p
 [6] Wu, Y.W., _et al._: MaxBin: an automated binning method to recover individual genomes from metagenomes using an expectation-maximization algorithm. Microbiome 2(1), 26 (2014)
 
 [7] Wu, Y.W., _et al._: MaxBin 2.0: an automated binning algorithm to recover genomes from multiple metagenomic datasets. Bioinformatics 32(4), 605–607 (2016)
+
+## Citation
+GraphBin2 has been accepted for publication at the 20th International Workshop on Algorithms in Bioinformatics (WABI 2020).
