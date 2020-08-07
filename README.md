@@ -15,9 +15,10 @@ GraphBin2 is an extension of [GraphBin](https://github.com/Vini2/GraphBin) which
 You will need the following python packages installed.
 * [Biopython](https://biopython.org/)
 * [python-igraph](https://igraph.org/python/)
+* [tqdm](https://github.com/tqdm/tqdm)
 
 ### Downloading GraphBin2
-You can download the latest release of GraphBin from [Releases](https://github.com/Vini2/GraphBin/releases) or clone the GraphBin repository to your machine.
+You can download the latest release of GraphBin from [Releases](https://github.com/Vini2/GraphBin/releases) or clone the GraphBin2 repository to your machine.
 
 ```
 git clone https://github.com/Vini2/GraphBin2.git
@@ -29,11 +30,30 @@ If you have downloaded a release, you will have to extract the files using the f
 unzip [file_name].zip
 ```
 
-Now go in to the GraphBin folder using the command
+Now go in to the GraphBin2 folder using the command
 
 ```
-cd GraphBin2/src/
+cd GraphBin2/
 ```
+
+### Setting up the environment
+We recommend that you use [Conda](https://docs.conda.io/en/latest/) to run GraphBin2. You can download [Anaconda](https://www.anaconda.com/distribution/) or [Miniconda](https://docs.conda.io/en/latest/miniconda.html) which contains Conda.
+
+Once you have installed Conda, make sure you are in the GraphBin2 folder. Now run the following commands to create a Conda environment and activate it to run GraphBin.
+
+```
+conda env create -f environment.yml
+conda activate graphbin2
+```
+
+Now you are ready to run GraphBin2.
+
+If you want to switch back to your normal environment, run the following command.
+
+```
+conda deactivate
+```
+
 
 ## Preprocessing
 
@@ -129,15 +149,26 @@ For the SGA version of `graphbin2.py` takes in 4 files as inputs (required).
 
 **Note:** abundance.abund is a tab separated file with contig ID and the coverage for each contig in the assembly. metaSPAdes provides the coverage of each contig in the contig identifier of the final assembly. We can directly extract these values to create the abundance.abund file. However, no such information is provided for contigs produced by SGA. Hence, reads should be mapped back to the assembled contigs in order to determine the coverage of SGA contigs.
 
-**Note:** The binning output file should have comma separated values ```(contig_number, bin_number)``` for each contig. The contents of the binning output file should look similar to the example given below. Contigs are named according to their number starting from 0 and the numbering of bins starts from 1.
+**Note:** Make sure that the initial binning result consists of contigs belonging to only one bin. GraphBin is designed to handle initial contigs which belong to only one bin. Multiple bins for the initial contigs are not supported.
 
-Example binned input
+**Note:** The binning output file should have comma separated values ```(contig_identifier, bin_number)``` for each contig. The contents of the binning output file should look similar to the example given below. Contigs are named according to their original identifier and the numbering of bins starts from 1.
+
+Example metaSPAdes binned input
 ```
-0,1
-1,2
-2,1
-3,1
-4,2
+NODE_1,1
+NODE_2,1
+NODE_3,1
+NODE_4,2
+NODE_5,2
+...
+```
+Example SGA binned input
+```
+contig-0,1
+contig-1,2
+contig-2,1
+contig-3,1
+contig-4,2
 ...
 ```
 
