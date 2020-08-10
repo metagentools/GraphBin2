@@ -184,7 +184,7 @@ if nthreads <= 0:
 # Run GraphBin2
 #---------------------------------------------------
 if assembler.lower() == "spades":
-    cmdGraphBin2 = """python "{0}src/graphbin2_SPAdes.py" --graph "{1}" --contigs "{2}" --paths "{3}" --binned "{4}" --output "{5}" --prefix "{6}" --depth "{7}" --threshold "{8}" --nthreads "{9}" """.format(
+    cmdGraphBin2 = """python "{0}/src/graphbin2_SPAdes.py" --graph "{1}" --contigs "{2}" --paths "{3}" --binned "{4}" --output "{5}" --prefix "{6}" --depth "{7}" --threshold "{8}" --nthreads "{9}" """.format(
         os.path.dirname(__file__), 
         assembly_graph_file,
         contigs,
@@ -197,7 +197,7 @@ if assembler.lower() == "spades":
         nthreads)
 
 elif assembler.lower() == "sga":
-    cmdGraphBin2 = """python "{0}src/graphbin2_SGA.py" --graph "{1}" --contigs "{2}" --binned "{3}" --abundance "{4}" --output "{5}" --prefix "{6}" --depth "{7}" --threshold "{8}"  --nthreads "{9}" """.format(
+    cmdGraphBin2 = """python "{0}/src/graphbin2_SGA.py" --graph "{1}" --contigs "{2}" --binned "{3}" --abundance "{4}" --output "{5}" --prefix "{6}" --depth "{7}" --threshold "{8}"  --nthreads "{9}" """.format(
         os.path.dirname(__file__), 
         assembly_graph_file,
         contigs,
