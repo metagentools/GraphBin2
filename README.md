@@ -220,6 +220,25 @@ python graphbin2.py --assembler sga --contigs /path/to/contigs.fa --abundance /p
 [7] Wu, Y.W., _et al._: MaxBin 2.0: an automated binning algorithm to recover genomes from multiple metagenomic datasets. Bioinformatics 32(4), 605–607 (2016)
 
 ## Citation
-GraphBin2 has been accepted for publication at the 20th International Workshop on Algorithms in Bioinformatics ([WABI 2020](http://algo2020.di.unipi.it/programme.html#wabi)). If you use GraphBin2 in your work, please cite GraphBin2 as follows.
+GraphBin2 has been accepted for publication at the 20th International Workshop on Algorithms in Bioinformatics ([WABI 2020](http://algo2020.di.unipi.it/WABI2020/)) and is published in [Leibniz International Proceedings in Informatics (LIPIcs)](https://www.dagstuhl.de/dagpub/978-3-95977-161-0) DOI: [10.4230/LIPIcs.WABI.2020.8](https://doi.org/10.4230/LIPIcs.WABI.2020.8). If you use GraphBin2 in your work, please cite GraphBin2 as follows.
 
-Vijini Mallawaarachchi, Anuradha Wickramarachchi, Yu Lin. GraphBin2: Refined and Overlapped Binning of Metagenomic Contigs using Assembly Graphs. In 20th International Workshop on Algorithms in Bioinformatics (WABI 2020), Pisa, Italy (Virtual Conference), September 2020, DOI: 10.4230/LIPIcs.WABI.2020.8
+```bibtex
+@InProceedings{mallawaarachchi_et_al:LIPIcs:2020:12797,
+  author =	{Vijini G. Mallawaarachchi and Anuradha S. Wickramarachchi and Yu Lin},
+  title =	{{GraphBin2: Refined and Overlapped Binning of Metagenomic Contigs Using Assembly Graphs}},
+  booktitle =	{20th International Workshop on Algorithms in Bioinformatics (WABI 2020)},
+  pages =	{8:1--8:21},
+  series =	{Leibniz International Proceedings in Informatics (LIPIcs)},
+  ISBN =	{978-3-95977-161-0},
+  ISSN =	{1868-8969},
+  year =	{2020},
+  volume =	{172},
+  editor =	{Carl Kingsford and Nadia Pisanti},
+  publisher =	{Schloss Dagstuhl--Leibniz-Zentrum f{\"u}r Informatik},
+  address =	{Dagstuhl, Germany},
+  URL =		{https://drops.dagstuhl.de/opus/volltexte/2020/12797},
+  URN =		{urn:nbn:de:0030-drops-127974},
+  doi =		{10.4230/LIPIcs.WABI.2020.8},
+  annote =	{Keywords: Metagenomics binning, contigs, assembly graphs, overlapped binning}
+}
+```
