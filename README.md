@@ -173,6 +173,8 @@ contig-4,2
 ...
 ```
 
+You can use the [`prepResult.py`](https://github.com/Vini2/GraphBin/blob/master/support/prepResult.py) script to format an initial binning result in to the .csv format with contig identifiers and bin ID. Further details can be found [here](https://github.com/Vini2/GraphBin/blob/master/support/README.md#prepresultpy).
+
 ## Example Usage
 
 ```
