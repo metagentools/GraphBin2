@@ -76,7 +76,7 @@ parser.add_argument("--delimiter",
                     required=False, 
                     type=str, 
                     default=",", 
-                    help="delimiter for input/output results. Supports a comma (,), a semicolon (;), a tab ($'\\t'), a space ( ) and a pipe (|) [default: , (comma)]")
+                    help="delimiter for input/output results. Supports a comma (,), a semicolon (;), a tab ($'\\t'), a space (\" \") and a pipe (|) [default: , (comma)]")
 
 parser.add_argument("--nthreads", 
                     required=False, 
