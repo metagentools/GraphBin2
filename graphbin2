@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-"""graphbin2.py: Refined and overlapped binning of metagenomic contigs using assembly graphs."""
+"""graphbin2: Refined and overlapped binning of metagenomic contigs using assembly graphs."""
 
 import argparse
 import os
