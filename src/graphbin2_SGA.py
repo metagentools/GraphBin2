@@ -7,6 +7,7 @@ import argparse
 import re
 import heapq
 import itertools as it
+import logging
 
 from multiprocessing import Pool
 from Bio import SeqIO
@@ -49,18 +50,36 @@ nthreads = args["nthreads"]
 
 n_bins = 0
 
-print("\nWelcome to GraphBin2: Refined and Overlapped Binning of Metagenomic Contigs using Assembly Graphs.")
-print("This version of GraphBin2 makes use of the assembly graph produced by SPAdes which is based on the de Bruijn graph approach.")
+# Setup logger
+#-----------------------
+logger = logging.getLogger('GraphBin2')
+logger.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+consoleHeader = logging.StreamHandler()
+consoleHeader.setFormatter(formatter)
+consoleHeader.setLevel(logging.INFO)
+logger.addHandler(consoleHeader)
 
-print("\nInput arguments:", contigs_file)
-print("Assembly graph file:", assembly_graph_file)
-print("Existing binning output file:", contig_bins_file)
-print("Final binning output file:", output_path)
-print("Depth:", depth)
-print("Threshold:", threshold)
-print("Number of threads:", nthreads)
+# Setup output path for log file
+#---------------------------------------------------
 
-print("\nGraphBin2 started\n-------------------")
+fileHandler = logging.FileHandler(output_path+"/"+prefix+"graphbin2.log")
+fileHandler.setLevel(logging.DEBUG)
+fileHandler.setFormatter(formatter)
+logger.addHandler(fileHandler)
+
+logger.info("Welcome to GraphBin2: Refined and Overlapped Binning of Metagenomic Contigs using Assembly Graphs.")
+logger.info("This version of GraphBin2 makes use of the assembly graph produced by SGA which is based on the string graph approach.")
+
+logger.info("Input arguments: "+contigs_file)
+logger.info("Assembly graph file: "+assembly_graph_file)
+logger.info("Existing binning output file: "+contig_bins_file)
+logger.info("Final binning output file: "+output_path)
+logger.info("Depth: "+str(depth))
+logger.info("Threshold: "+str(threshold))
+logger.info("Number of threads: "+str(nthreads))
+
+logger.info("GraphBin2 started")
 
 start_time = time.time()
 
@@ -102,6 +121,8 @@ with open(abundance_file, "r") as my_file:
 
 links = []
 
+contig_names = {}
+
 my_map = BidirectionalMap()
 
 node_count = 0
@@ -119,6 +140,7 @@ try:
                 end = ''
                 contig_num = int(re.search('%s(.*)%s' % (start, end), str(line.split()[1])).group(1))
                 my_map[node_count] = contig_num
+                contig_names[node_count] = line.split()[1].strip()
                 node_count += 1
             
             # Identify lines with link information
@@ -131,14 +153,14 @@ try:
             line = file.readline()
 
 except:
-    print("Please make sure that the correct path to the assembly graph file is provided.")
-    print("Exiting GraphBin2... Bye...!")
+    logger.error("Please make sure that the correct path to the assembly graph file is provided.")
+    logger.info("Exiting GraphBin2... Bye...!")
     sys.exit(1)
 
 contigs_map = my_map
 contigs_map_rev = my_map.inverse
 
-print("Total number of contigs available: "+str(node_count))
+logger.info("Total number of contigs available: "+str(node_count))
 
 
 ## Construct the assembly graph
@@ -172,11 +194,11 @@ try:
     assembly_graph.simplify(multiple=True, loops=False, combine_edges=None)
 
 except:
-    print("Please make sure that the correct path to the assembly graph file is provided.")
-    print("Exiting GraphBin2... Bye...!")
+    logger.error("Please make sure that the correct path to the assembly graph file is provided.")
+    logger.info("Exiting GraphBin2... Bye...!")
     sys.exit(1)
 
-print("Total number of edges in the assembly graph: "+str(len(edge_list)))
+logger.info("Total number of edges in the assembly graph: "+str(len(edge_list)))
 
 
 # Get the number of bins from the initial binning result
@@ -194,10 +216,10 @@ try:
     bins_list.sort()
 
     n_bins = len(bins_list)
-    print("Number of bins available in binning result:", n_bins)
+    logger.info("Number of bins available in binning result: "+str(n_bins))
 except:
-    print("\nPlease make sure that the correct path to the binning result file is provided and it is having the correct format")
-    print("Exiting GraphBin2... Bye...!")
+    logger.error("Please make sure that the correct path to the binning result file is provided and it is having the correct format")
+    logger.info("Exiting GraphBin2... Bye...!")
     sys.exit(1)
 
 
@@ -221,8 +243,8 @@ try:
         bins[i].sort()
 
 except:
-    print("Please make sure that you have provided the correct assembler type and the correct path to the binning result file in the correct format.")
-    print("Exiting GraphBin2... Bye...!")
+    logger.error("Please make sure that you have provided the correct assembler type and the correct path to the binning result file in the correct format.")
+    logger.info("Exiting GraphBin2... Bye...!")
     sys.exit(1)
 
 
@@ -243,8 +265,8 @@ for i in range(node_count):
 binned_contigs.sort()
 unbinned_contigs.sort()
 
-print("No. of binned contigs:", len(binned_contigs))
-print("No. of unbinned contigs:", len(unbinned_contigs))
+logger.info("No. of binned contigs: "+str(len(binned_contigs)))
+logger.info("No. of unbinned contigs: "+str(len(unbinned_contigs)))
 
 
 # Get isolated vertices
@@ -304,13 +326,13 @@ def runBFS(node, threhold=depth):
 # Remove labels of unsupported vertices
 #-----------------------------------------------------
 
-print("\nRemoving labels of unsupported vertices...")
+logger.info("Removing labels of unsupported vertices")
 
 iter_num = 1
 
 while True:
     
-    print("Iteration:", iter_num)
+    logger.debug("Iteration: "+str(iter_num))
     
     remove_labels = {}
 
@@ -383,7 +405,7 @@ while True:
 # Refine labels of inconsistent vertices
 #-----------------------------------------------------
 
-print("\nRefining labels of inconsistent vertices...")
+logger.info("Refining labels of inconsistent vertices")
 
 iter_num = 1
 
@@ -391,7 +413,7 @@ once_moved = []
 
 while True:
     
-    print("Iteration:", iter_num)
+    logger.debug("Iteration: "+str(iter_num))
     
     contigs_to_correct = {}
 
@@ -472,7 +494,7 @@ while True:
 
 # Get non isolated contigs
 
-print("\nObtaining non isolated contigs...")
+logger.info("Obtaining non isolated contigs")
 
 # Initialise progress bar
 pbar = tqdm(total=node_count)
@@ -523,17 +545,17 @@ for i in range(node_count):
 # Close progress bar
 pbar.close()
 
-print("\nNumber of non-isolated contigs:", len(non_isolated))
+logger.info("Number of non-isolated contigs: "+str(len(non_isolated)))
 
 non_isolated_unbinned = list(set(non_isolated).intersection(set(unbinned_contigs)))
 
-print("Number of non-isolated unbinned contigs:", len(non_isolated_unbinned))
+logger.info("Number of non-isolated unbinned contigs: "+str(len(non_isolated_unbinned)))
 
 
 # Propagate labels to unlabelled vertices
 #-----------------------------------------------------
 
-print("\nPropagating labels to unlabelled vertices...")
+logger.info("Propagating labels to unlabelled vertices")
 
 # Initialise progress bar
 pbar = tqdm(total=len(non_isolated_unbinned))
@@ -593,7 +615,7 @@ pbar.close()
 # Determine contigs belonging to multiple bins
 #-----------------------------------------------------
 
-print("\nDetermining multi-binned contigs...")
+logger.info("Determining multi-binned contigs")
 
 bin_cov_sum = [0 for x in range(n_bins)]
 bin_contig_len_total = [0 for x in range(n_bins)]
@@ -688,13 +710,13 @@ with Pool(nthreads) as p:
 multi_bins = list(filter(lambda x: x is not None, mapped))
 
 if len(multi_bins) == 0:
-    print("No multi-labelled contigs were found")
+    logger.info("No multi-labelled contigs were found")
 else:
-    print("Found", str(len(multi_bins)), "multi-labelled contigs ==>")
+    logger.info("Found "+str(len(multi_bins))+" multi-labelled contigs ==>")
 
 # Add contigs to multiplt bins
 for contig, min_diff_combination in multi_bins:
-    print("Contig", contig, "belongs to bins", min_diff_combination)
+    logger.info(contig_names[contig]+" belongs to bins "+', '.join(str(s+1) for s in min_diff_combination))
     for mybin in min_diff_combination:
         if contig not in bins[mybin]:
             bins[mybin].append(contig)
@@ -703,8 +725,8 @@ for contig, min_diff_combination in multi_bins:
 # Determine elapsed time
 elapsed_time = time.time() - start_time
 
-# Print elapsed time for the process
-print("\nElapsed time: ", elapsed_time, " seconds")
+# Show elapsed time for the process
+logger.info("Elapsed time: "+str(elapsed_time)+" seconds")
 
 # Sort contigs in bins
 for i in range(n_bins):
@@ -720,7 +742,7 @@ for i in range(node_count):
     for k in range(n_bins):
         if i in bins[k]:
             line = []
-            line.append("contig-"+str(contigs_map[i]))
+            line.append(contig_names[i])
             line.append(k+1)
             output_bins.append(line)
 
@@ -732,10 +754,10 @@ with open(output_file, mode='w') as output_file:
     for row in output_bins:
         output_writer.writerow(row)
 
-print("\nFinal binning results can be found at", output_file.name)
+logger.info("Final binning results can be found at "+str(output_file.name))
 
 
 # Exit program
 #-----------------------------------
 
-print("\nThank you for using GraphBin2!\n")
+logger.info("Thank you for using GraphBin2!")
