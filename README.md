@@ -163,11 +163,11 @@ For the SGA version of `graphbin2.py` takes in 4 files as inputs (required).
 
 Example metaSPAdes binned input
 ```
-NODE_1,1
-NODE_2,1
-NODE_3,1
-NODE_4,2
-NODE_5,2
+NODE_1_length_507141_cov_16.465306,1
+NODE_2_length_487410_cov_94.354557,1
+NODE_3_length_483145_cov_59.410818,1
+NODE_4_length_468490_cov_20.967912,2
+NODE_5_length_459607_cov_59.128379,2
 ...
 ```
 Example SGA binned input
@@ -180,7 +180,7 @@ contig-4,2
 ...
 ```
 
-You can use the [`prepResult.py`](https://github.com/Vini2/GraphBin/blob/master/support/prepResult.py) script to format an initial binning result in to the .csv format with contig identifiers and bin ID. Further details can be found [here](https://github.com/Vini2/GraphBin/blob/master/support/README.md#prepresultpy).
+You can use the [`prepResult.py`](https://github.com/Vini2/GraphBin2/blob/master/support/prepResult.py) script to format an initial binning result in to the .csv format with contig identifiers and bin ID. Further details can be found [here](https://github.com/Vini2/GraphBin2/blob/master/support/README.md).
 
 ## Example Usage
 
