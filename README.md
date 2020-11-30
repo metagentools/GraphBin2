@@ -105,7 +105,8 @@ python graphbin2.py -h
 usage: graphbin2.py [-h] --assembler ASSEMBLER --graph GRAPH --contigs CONTIGS
                     [--paths PATHS] [--abundance ABUNDANCE] --binned BINNED
                     --output OUTPUT [--prefix PREFIX] [--depth DEPTH]
-                    [--threshold THRESHOLD] [--nthreads NTHREADS]
+                    [--threshold THRESHOLD] [--delimiter DELIMITER]
+                    [--nthreads NTHREADS]
 
 GraphBin2 Help. GraphBin2 is a tool which refines the binning results obtained
 from existing tools and, more importantly, is able to assign contigs to
@@ -131,6 +132,10 @@ optional arguments:
   --threshold THRESHOLD
                         threshold for determining inconsistent vertices.
                         [default: 1.5]
+  --delimiter DELIMITER
+                        delimiter for input/output results. Supports a comma
+                        (,), a semicolon (;), a tab ($'\t'), a space ( ) and a
+                        pipe (|) [default: , (comma)]
   --nthreads NTHREADS   number of threads to use. [default: 8]
 ```
 
@@ -147,6 +152,8 @@ For the SGA version of `graphbin2.py` takes in 4 files as inputs (required).
 * Abundance file (tab separated file with contig ID and coverage in each line)
 * Assembly graph file (in `.asqg` format)
 * Binning output from an existing tool (in `.csv` format)
+
+**Note:** You can specify the delimiter for the initial binning result file and the final output file using the `delimiter` paramter. Enter the following values for different delimiters; `,` for a comma, `;` for a semicolon, `$'\t'` for a tab, `" "` for a space `|` for a pipe.
 
 **Note:** The abundance file (e.g., `abundance.abund`) is a tab separated file with contig ID and the coverage for each contig in the assembly. metaSPAdes provides the coverage of each contig in the contig identifier of the final assembly. We can directly extract these values to create the abundance.abund file. However, no such information is provided for contigs produced by SGA. Hence, reads should be mapped back to the assembled contigs in order to determine the coverage of SGA contigs.
 
