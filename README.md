@@ -98,15 +98,14 @@ python SolidBin.py --contig_file /path/to/contigs.fasta --composition_profiles /
 ```
 
 ## Using GraphBin2
-You can see the usage options of GraphBin2 by typing ```python graphbin2.py -h``` on the command line. For example,
+You can see the usage options of GraphBin2 by typing `./graphbin2 -h` on the command line. For example,
 
 ```
-python graphbin2.py -h
-usage: graphbin2.py [-h] --assembler ASSEMBLER --graph GRAPH --contigs CONTIGS
-                    [--paths PATHS] [--abundance ABUNDANCE] --binned BINNED
-                    --output OUTPUT [--prefix PREFIX] [--depth DEPTH]
-                    [--threshold THRESHOLD] [--delimiter DELIMITER]
-                    [--nthreads NTHREADS]
+usage: graphbin2 [-h] --assembler ASSEMBLER --graph GRAPH --contigs CONTIGS                 
+                 [--paths PATHS] [--abundance ABUNDANCE] --binned BINNED                 
+                 --output OUTPUT [--prefix PREFIX] [--depth DEPTH]
+                 [--threshold THRESHOLD] [--delimiter DELIMITER]
+                 [--nthreads NTHREADS]
 
 GraphBin2 Help. GraphBin2 is a tool which refines the binning results obtained
 from existing tools and, more importantly, is able to assign contigs to
@@ -134,8 +133,8 @@ optional arguments:
                         [default: 1.5]
   --delimiter DELIMITER
                         delimiter for input/output results. Supports a comma
-                        (,), a semicolon (;), a tab ($'\t'), a space ( ) and a
-                        pipe (|) [default: , (comma)]
+                        (,), a semicolon (;), a tab ($'\t'), a space (" ") and
+                        a pipe (|) [default: , (comma)]
   --nthreads NTHREADS   number of threads to use. [default: 8]
 ```
 
