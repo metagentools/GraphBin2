@@ -98,6 +98,8 @@ paths = {}
 segment_contigs = {}
 node_count = 0
 
+contig_names = {}
+
 my_map = BidirectionalMap()
 
 current_contig_num = ""
@@ -120,6 +122,7 @@ try:
 
             if current_contig_num != contig_num:
                 my_map[node_count] = int(contig_num)
+                contig_names[node_count] = name.strip()
                 current_contig_num = contig_num
                 node_count += 1
             
@@ -264,7 +267,7 @@ try:
         readCSV = csv.reader(contig_bins, delimiter=delimiter)
         for row in readCSV:
             start = 'NODE_'
-            end = ''
+            end = '_length_'
             contig_num = contigs_map_rev[int(re.search('%s(.*)%s' % (start, end), row[0]).group(1))]
             
             bin_num = int(row[1])-1
@@ -773,7 +776,7 @@ for i in range(node_count):
     for k in range(n_bins):
         if i in bins[k]:
             line = []
-            line.append("NODE_"+str(contigs_map[i]))
+            line.append(contig_names[i])
             line.append(k+1)
             output_bins.append(line)
 
