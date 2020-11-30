@@ -31,6 +31,7 @@ ap.add_argument("--output", required=True, help="path to the output folder")
 ap.add_argument("--prefix", required=False, default='', help="prefix for the output file")
 ap.add_argument("--depth", required=False, type=int, default=5, help="maximum depth for the breadth-first-search. [default: 5]")
 ap.add_argument("--threshold", required=False, type=float, default=1.5, help="threshold for determining inconsistent vertices. [default: 1.5]")
+ap.add_argument("--delimiter", required=False, type=str, default=",", help="delimiter for input/output results [default: , (comma)]")
 ap.add_argument("--nthreads", required=False, type=int, default=8, help="number of threads to use. [default: 8]")
 
 args = vars(ap.parse_args())
@@ -43,6 +44,7 @@ output_path = args["output"]
 prefix = args["prefix"]
 depth = args["depth"]
 threshold = args["threshold"]
+delimiter = args["delimiter"]
 nthreads = args["nthreads"]
 
 n_bins = 0
@@ -184,7 +186,7 @@ try:
     all_bins_list = []
 
     with open(contig_bins_file) as csvfile:
-        readCSV = csv.reader(csvfile, delimiter=',')
+        readCSV = csv.reader(csvfile, delimiter=delimiter)
         for row in readCSV:
             all_bins_list.append(row[1])
             
@@ -206,7 +208,7 @@ bins = [[] for x in range(n_bins)]
 
 try:
     with open(contig_bins_file) as contig_bins:
-        readCSV = csv.reader(contig_bins, delimiter=',')
+        readCSV = csv.reader(contig_bins, delimiter=delimiter)
         for row in readCSV:
             start = 'contig-'
             end = ''
@@ -725,7 +727,7 @@ for i in range(node_count):
 output_file = output_path + prefix + 'graphbin2_output.csv'
 
 with open(output_file, mode='w') as output_file:
-    output_writer = csv.writer(output_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+    output_writer = csv.writer(output_file, delimiter=delimiter, quotechar='"', quoting=csv.QUOTE_MINIMAL)
     
     for row in output_bins:
         output_writer.writerow(row)

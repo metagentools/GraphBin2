@@ -72,6 +72,12 @@ parser.add_argument("--threshold",
                     default=1.5, 
                     help="threshold for determining inconsistent vertices. [default: 1.5]")
 
+parser.add_argument("--delimiter", 
+                    required=False, 
+                    type=str, 
+                    default=",", 
+                    help="delimiter for input/output results. Supports a comma (,), a semicolon (;), a tab ($'\\t'), a space ( ) and a pipe (|) [default: , (comma)]")
+
 parser.add_argument("--nthreads", 
                     required=False, 
                     type=int, 
@@ -91,6 +97,7 @@ output_path = args["output"]
 prefix = args["prefix"]
 depth = args["depth"]
 threshold = args["threshold"]
+delimiter = args["delimiter"]
 nthreads = args["nthreads"]
 
 
@@ -174,6 +181,16 @@ if threshold < 1.0:
     print("Exiting GraphBin2...\nBye...!\n")
     sys.exit(1)
 
+# Validate delimiter
+delimiters = [",", ";", " ", "\t", "|"]
+
+if delimiter not in delimiters:
+    print("delimiter", delimiter)
+    print("\nPlease enter a valid delimiter")
+    print("Exiting GraphBin2...\nBye...!\n")
+    sys.exit(1)
+
+
 # Validate number of threads
 if nthreads <= 0:
     print("\nPlease enter a valid number for the number of threads")
@@ -184,7 +201,7 @@ if nthreads <= 0:
 # Run GraphBin2
 #---------------------------------------------------
 if assembler.lower() == "spades":
-    cmdGraphBin2 = """python "{0}/src/graphbin2_SPAdes.py" --graph "{1}" --contigs "{2}" --paths "{3}" --binned "{4}" --output "{5}" --prefix "{6}" --depth "{7}" --threshold "{8}" --nthreads "{9}" """.format(
+    cmdGraphBin2 = """python "{0}/src/graphbin2_SPAdes.py" --graph "{1}" --contigs "{2}" --paths "{3}" --binned "{4}" --output "{5}" --prefix "{6}" --depth "{7}" --threshold "{8}" --delimiter "{9}" --nthreads "{10}" """.format(
         os.path.dirname(__file__), 
         assembly_graph_file,
         contigs,
@@ -194,10 +211,11 @@ if assembler.lower() == "spades":
         prefix,
         depth,
         threshold,
+        delimiter,
         nthreads)
 
 elif assembler.lower() == "sga":
-    cmdGraphBin2 = """python "{0}/src/graphbin2_SGA.py" --graph "{1}" --contigs "{2}" --binned "{3}" --abundance "{4}" --output "{5}" --prefix "{6}" --depth "{7}" --threshold "{8}"  --nthreads "{9}" """.format(
+    cmdGraphBin2 = """python "{0}/src/graphbin2_SGA.py" --graph "{1}" --contigs "{2}" --binned "{3}" --abundance "{4}" --output "{5}" --prefix "{6}" --depth "{7}" --threshold "{8}" --delimiter "{9}"  --nthreads "{10}" """.format(
         os.path.dirname(__file__), 
         assembly_graph_file,
         contigs,
@@ -207,6 +225,7 @@ elif assembler.lower() == "sga":
         prefix,
         depth,
         threshold,
+        delimiter,
         nthreads)
 
 
