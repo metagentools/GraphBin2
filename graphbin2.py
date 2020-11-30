@@ -185,7 +185,6 @@ if threshold < 1.0:
 delimiters = [",", ";", " ", "\t", "|"]
 
 if delimiter not in delimiters:
-    print("delimiter", delimiter)
     print("\nPlease enter a valid delimiter")
     print("Exiting GraphBin2...\nBye...!\n")
     sys.exit(1)
