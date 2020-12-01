@@ -60,7 +60,7 @@ conda deactivate
 
 ## Preprocessing
 
-Firstly, you will have to assemble your set of reads into contigs. For this purpose, you can use metaSPAdes or SGA.
+Firstly, you will have to assemble your set of reads into contigs. For this purpose, you can use metaSPAdes, SGA or metaFlye.
 
 ### metaSPAdes
 [**SPAdes**](http://cab.spbu.ru/software/spades/) is a short-read assembler based on the de Bruijn graph approach. [**metaSPAdes**](https://genome.cshlp.org/content/27/5/824) is the dedicated metagenomic assembler of SPAdes. Use metaSPAdes (SPAdes in metagenomics mode) software to assemble short reads into contigs. A sample command is given below.
@@ -168,13 +168,13 @@ The Flye version of `graphbin2.py` takes in 4 files as inputs (required).
 * Assembly graph file (in `.gfa` format)
 * Binning output from an existing tool (in `.csv` format)
 
-**Note:** You can specify the delimiter for the initial binning result file and the final output file using the `delimiter` paramter. Enter the following values for different delimiters; `,` for a comma, `;` for a semicolon, `$'\t'` for a tab, `" "` for a space and `|` for a pipe.
-
 **Note:** The abundance file (e.g., `abundance.abund`) is a tab separated file with contig ID and the coverage for each contig in the assembly. metaSPAdes provides the coverage of each contig in the contig identifier of the final assembly. We can directly extract these values to create the abundance.abund file. However, no such information is provided for contigs produced by SGA. Hence, reads should be mapped back to the assembled contigs in order to determine the coverage of SGA contigs.
 
 **Note:** Make sure that the initial binning result consists of contigs belonging to only one bin. GraphBin2 is designed to handle initial contigs which belong to only one bin.
 
-**Note:** The binning output file should have comma separated values ```(contig_identifier, bin_number)``` for each contig. The contents of the binning output file should look similar to the example given below. Contigs are named according to their original identifier and the numbering of bins starts from 1.
+**Note:** You can specify the delimiter for the initial binning result file and the final output file using the `delimiter` paramter. Enter the following values for different delimiters; `,` for a comma, `;` for a semicolon, `$'\t'` for a tab, `" "` for a space and `|` for a pipe.
+
+**Note:** The binning output file should have delimiter separated (e.g., comma separated) values ```(contig_identifier, bin_number)``` for each contig. The contents of the binning output file should look similar to the example given below. Contigs are named according to their original identifier and the numbering of bins starts from 1.
 
 Example metaSPAdes binned input
 ```
