@@ -22,7 +22,7 @@ adjust existing binning results on contigs and to infer contigs shared by multip
 parser.add_argument("--assembler", 
                     required=True, 
                     type=str,
-                    help="name of the assembler used (SPAdes or SGA)")
+                    help="name of the assembler used (SPAdes, SGA or Flye)")
 
 parser.add_argument("--graph", 
                     required=True,
@@ -105,8 +105,8 @@ nthreads = args["nthreads"]
 #---------------------------------------------------
 
 # Check assembler type
-if not (assembler.lower() == "spades" or assembler.lower() == "sga"):
-    print("\nPlease make sure to provide the correct assembler type (SPAdes or SGA).")
+if not (assembler.lower() == "spades" or assembler.lower() == "sga" or assembler.lower() == "flye"):
+    print("\nPlease make sure to provide the correct assembler type (SPAdes, SGA or Flye).")
     print("Exiting GraphBin2...\nBye...!\n")
     sys.exit(1)
 
@@ -140,8 +140,20 @@ if assembler.lower() == "sga" and abundance is None:
     print("Exiting GraphBin2...\nBye...!\n")
     sys.exit(1)
 
-# Check contigs.paths file for sga
+# Check abundance file for SGA
 if assembler.lower() == "sga" and not os.path.isfile(abundance):
+    print("\nFailed to open the abundance file.")
+    print("Exiting GraphBin2...\nBye...!\n")
+    sys.exit(1)
+
+# Check if abundance file is provided when the assembler type is Flye
+if assembler.lower() == "flye" and abundance is None:
+    print("\nPlease make sure to provide the path to the abundance file.")
+    print("Exiting GraphBin2...\nBye...!\n")
+    sys.exit(1)
+
+# Check abundance file for Flye
+if assembler.lower() == "flye" and not os.path.isfile(abundance):
     print("\nFailed to open the abundance file.")
     print("Exiting GraphBin2...\nBye...!\n")
     sys.exit(1)
@@ -215,6 +227,20 @@ if assembler.lower() == "spades":
 
 elif assembler.lower() == "sga":
     cmdGraphBin2 = """python "{0}/src/graphbin2_SGA.py" --graph "{1}" --contigs "{2}" --binned "{3}" --abundance "{4}" --output "{5}" --prefix "{6}" --depth "{7}" --threshold "{8}" --delimiter "{9}"  --nthreads "{10}" """.format(
+        os.path.dirname(__file__), 
+        assembly_graph_file,
+        contigs,
+        contig_bins_file, 
+        abundance,
+        output_path,
+        prefix,
+        depth,
+        threshold,
+        delimiter,
+        nthreads)
+
+elif assembler.lower() == "flye":
+    cmdGraphBin2 = """python "{0}/src/graphbin2_Flye.py" --graph "{1}" --contigs "{2}" --binned "{3}" --abundance "{4}" --output "{5}" --prefix "{6}" --depth "{7}" --threshold "{8}" --delimiter "{9}"  --nthreads "{10}" """.format(
         os.path.dirname(__file__), 
         assembly_graph_file,
         contigs,
