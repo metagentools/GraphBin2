@@ -88,7 +88,7 @@ sga assemble -m 95 reads.k41.filter.pass.merged.asqg.gz
 [**Flye**](https://github.com/fenderglass/Flye) is a long-read assembler based on the de Bruijn graph approach. [**metaFlye**](https://www.nature.com/articles/s41592-020-00971-x) is the dedicated metagenomic assembler of Flye. Use metaFlye (Flye in metagenomics mode) software to assemble long reads into contigs. A sample command is given below.
 
 ```
-flye --meta --pacbio-raw reads.fasta --out-dir /path/output_folder --threads 16
+flye --meta --pacbio-raw reads.fasta -g metagenome_size --out-dir /path/output_folder --threads 16
 ```
 
 Next, you have to bin the resulting contigs using an existing contig-binning tool. We have used the following tools with their commands for the experiments.
