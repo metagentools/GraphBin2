@@ -10,6 +10,8 @@
 
 GraphBin2 is an extension of [GraphBin](https://github.com/Vini2/GraphBin) which refines the binning results obtained from existing tools and, more importantly, is able to assign contigs to multiple bins. GraphBin2 uses the connectivity and coverage information from assembly graphs to adjust existing binning results on contigs and to infer contigs shared by multiple species.
 
+**Note:** Due to recent requests from the community, we have added support for long-read assemblies produced from Flye. Please note that GraphBin2 has not been tested extensively on long-read assemblies. We originally developed GraphBin2 for short-read assemblies. Long-read assemblies might have sparsely connected graphs which can make the label propagation process less effective and may not result in improvements.
+
 ## Getting Started
 
 ### Dependencies
@@ -116,7 +118,7 @@ contigs shared by multiple species.
 optional arguments:
   -h, --help            show this help message and exit
   --assembler ASSEMBLER
-                        name of the assembler used (SPAdes or SGA)
+                        name of the assembler used (SPAdes, SGA or Flye)
   --graph GRAPH         path to the assembly graph file
   --contigs CONTIGS     path to the contigs file
   --paths PATHS         path to the contigs.paths file
@@ -140,16 +142,22 @@ optional arguments:
 
 ## Input Format
 
-For the SPAdes version of `graphbin2.py` takes in 4 files as inputs (required).
+The SPAdes version of `graphbin2.py` takes in 4 files as inputs (required).
 * Contigs file (in `.fasta` format)
 * Assembly graph file (in `.gfa` format)
 * Paths of contigs (in `.paths` format)
 * Binning output from an existing tool (in `.csv` format)
 
-For the SGA version of `graphbin2.py` takes in 4 files as inputs (required).
+The SGA version of `graphbin2.py` takes in 4 files as inputs (required).
 * Contigs file (in `.fasta` format)
 * Abundance file (tab separated file with contig ID and coverage in each line)
 * Assembly graph file (in `.asqg` format)
+* Binning output from an existing tool (in `.csv` format)
+
+The Flye version of `graphbin2.py` takes in 4 files as inputs (required).
+* Contigs file (in `.fasta` format)
+* Abundance file (tab separated file with contig ID and coverage in each line)
+* Assembly graph file (in `.gfa` format)
 * Binning output from an existing tool (in `.csv` format)
 
 **Note:** You can specify the delimiter for the initial binning result file and the final output file using the `delimiter` paramter. Enter the following values for different delimiters; `,` for a comma, `;` for a semicolon, `$'\t'` for a tab, `" "` for a space and `|` for a pipe.
@@ -178,6 +186,15 @@ contig-3,1
 contig-4,2
 ...
 ```
+Example Flye binned input
+```
+edge_1,1
+edge_2,2
+edge_3,1
+edge_4,1
+edge_5,2
+...
+```
 
 You can use the [`prepResult.py`](https://github.com/Vini2/GraphBin2/blob/master/support/prepResult.py) script to format an initial binning result in to the .csv format with contig identifiers and bin ID. Further details can be found [here](https://github.com/Vini2/GraphBin2/blob/master/support/README.md).
 
@@ -188,6 +205,9 @@ python graphbin2.py --assembler spades --contigs /path/to/contigs.fasta --graph 
 ```
 ```
 python graphbin2.py --assembler sga --contigs /path/to/contigs.fa --abundance /path/to/abundance.tsv --graph /path/to/graph_file.asqg --binned /path/to/binning_result.csv --output /path/to/output_folder
+```
+```
+python graphbin2.py --assembler flye --contigs /path/to/edges.fasta --abundance /path/to/abundance.tsv --graph /path/to/graph_file.gfa --binned /path/to/binning_result.csv --output /path/to/output_folder
 ```
 
 ## Visualization of the metaSPAdes Assembly Graph of the Sim-5G Dataset
