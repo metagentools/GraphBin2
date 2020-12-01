@@ -36,7 +36,7 @@ You can also specify the delimiter for the initial binning result file using the
 
 ## gfa2fasta.py
 
-Please note that, if you are using Flye/Miniasm assemblies, you should provide the edge sequences for the initial binning tool (not the contigs output from Flye/Miniasm). To get the edge sequences from the GFA file, you can use the script [gfa2fasta.py](https://github.com/Vini2/GraphBin2/blob/master/support/gfa2fasta.py) as the assembly graph consists of these edge sequences and not contigs.
+Please note that, if you are using Flye/Miniasm assemblies, you should provide the edge sequences for the initial binning tool (not the contigs output from Flye/Miniasm). To get the edge sequences from the GFA file, you can use the script [`gfa2fasta.py`](https://github.com/Vini2/GraphBin2/blob/master/support/gfa2fasta.py) as the assembly graph consists of these edge sequences and not contigs.
 
 You can see the usage options of `gfa2fasta.py` by typing `python gfa2fasta.py -h` on the command line.
 
