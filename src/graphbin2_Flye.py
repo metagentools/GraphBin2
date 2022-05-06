@@ -13,9 +13,11 @@ from multiprocessing import Pool
 from Bio import SeqIO
 from igraph import *
 from collections import defaultdict
+from scipy.spatial import distance
 from bidirectionalmap.bidirectionalmap import BidirectionalMap
 from tqdm import tqdm
 
+VERY_SMALL_VAL = 0.0001
 
 # Setup argument parser
 #---------------------------------------------------
@@ -27,6 +29,7 @@ adjust existing binning results on contigs and to infer contigs shared by multip
 ap.add_argument("--contigs", required=True, help="path to the contigs file")
 ap.add_argument("--abundance", required=True, help="path to the abundance file")
 ap.add_argument("--graph", required=True, help="path to the assembly graph file")
+ap.add_argument("--paths", required=True, help="path to the contigs.paths file")
 ap.add_argument("--binned", required=True, help="path to the .csv file with the initial binning output from an existing tool")
 ap.add_argument("--output", required=True, help="path to the output folder")
 ap.add_argument("--prefix", required=False, default='', help="prefix for the output file")
@@ -40,6 +43,7 @@ args = vars(ap.parse_args())
 contigs_file = args["contigs"]
 abundance_file = args["abundance"]
 assembly_graph_file = args["graph"]
+contig_paths = args["paths"]
 contig_bins_file = args["binned"]
 output_path = args["output"]
 prefix = args["prefix"]
@@ -74,6 +78,8 @@ logger.info("This version of GraphBin2 makes use of the assembly graph produced 
 logger.info("Input arguments:")
 logger.info("Contigs file: "+contigs_file)
 logger.info("Assembly graph file: "+assembly_graph_file)
+logger.info("Contig paths file: "+contig_paths)
+logger.info("Abundance file: "+abundance_file)
 logger.info("Existing binning output file: "+contig_bins_file)
 logger.info("Final binning output file: "+output_path)
 logger.info("Depth: "+str(depth))
@@ -89,90 +95,197 @@ start_time = time.time()
 
 contig_lengths = {}
 
-for index, record in enumerate(SeqIO.parse(contigs_file, "fasta")):
-    
-    start_n = 'edge_'
-    end_n = ''
+contig_names = BidirectionalMap()
 
-    contig_num = int(re.search('%s(.*)%s' % (start_n, end_n), record.id).group(1))-1
+contig_num = 0
 
-    length = len(record.seq)
-    contig_lengths[contig_num] = length
+with open(contig_paths, "r") as file:
+
+        for line in file.readlines():
+
+            if not line.startswith("#"):
+                strings = line.strip().split()
+                contig_names[contig_num] = strings[0]
+                contig_lengths[contig_num] = int(strings[1])
+                contig_num += 1
+
+contig_names_rev = contig_names.inverse
 
 coverages = {}
 
-with open(abundance_file, "r") as my_file:
-    line = my_file.readline()
+with open(abundance_file, "r") as my_abundance:
+    for line in my_abundance:
+        strings = line.strip().split("\t")
+
+        contig_num = contig_names_rev[strings[0]]
+
+        for i in range(1, len(strings)):
+
+            contig_coverage = float(strings[i])
+
+            if contig_coverage < VERY_SMALL_VAL:
+                contig_coverage = VERY_SMALL_VAL
+
+            if contig_num not in coverages:
+                coverages[contig_num] = [contig_coverage]
+            else:
+                coverages[contig_num].append(contig_coverage)
+
+# with open(abundance_file, "r") as my_file:
+#     line = my_file.readline()
     
-    while line!="":
-        strings = line.split("\t")
+#     while line!="":
+#         strings = line.split("\t")
 
-        start_n = 'edge_'
-        end_n = ''
+#         start_n = 'edge_'
+#         end_n = ''
 
-        contig_num = int(re.search('%s(.*)%s' % (start_n, end_n), strings[0]).group(1))-1
+#         contig_num = contig_names_rev[strings[0]]
 
-        coverages[contig_num] = int(strings[1])
-        line = my_file.readline()
+#         coverages[contig_num] = int(strings[1])
+#         line = my_file.readline()
 
 
-
-# Get the links from the .gfa file
+# Get the paths and edges
 #-----------------------------------
 
-my_map = BidirectionalMap()
+paths = {}
+segment_contigs = {}
 
-node_count = 0
+contig_segments = {}
 
-my_names_map = BidirectionalMap()
+try:
+    with open(contig_paths) as file:
 
-links = []
+        for line in file.readlines():
 
-# try:
-# Get contig connections from .gfa file
-with open(assembly_graph_file) as file:
-    line = file.readline()
+            if not line.startswith("#"):
 
-    while line != "":
+                strings = line.strip().split()
 
-        # Count the number of contigs
-        if "S" in line:
-            strings = line.split("\t")
-            my_node = strings[1].strip()
+                contig_name = strings[0]
 
-            start = 'edge_'
-            end = ''
-            contig_num = int(re.search('%s(.*)%s' % (start, end), my_node).group(1))-1
+                path = strings[-1]
+                path = path.replace("*", "")
 
-            my_map[node_count] = contig_num
-            my_names_map[node_count] = my_node
-            node_count += 1
+                if path.startswith(","):
+                    path = path[1:]
+                
+                if path.endswith(","):
+                    path = path[:-1]
 
-        # Identify lines with link information
-        elif "L" in line:
+                segments = path.rstrip().split(",")
 
-            link = []
-            strings = line.split("\t")
+                contig_num = contig_names_rev[contig_name]
 
-            if strings[1] != strings[3]:
-                start = strings[1]
-                end = strings[3]
-                link.append(start)
-                link.append(end)
-                links.append(link)
+                if contig_num not in paths:
+                    paths[contig_num] = segments
 
+                for segment in segments:
+                    
+                    if segment != "":
+
+                        if segment not in segment_contigs:
+                            segment_contigs[segment] = set([contig_num])
+                        else:
+                            segment_contigs[segment].add(contig_num)
+
+
+    links = []
+    links_map = defaultdict(set)
+
+    # Get links from assembly_graph.gfa
+    with open(assembly_graph_file) as file:
         line = file.readline()
 
-# except:
-#     logger.error("Please make sure that the correct path to the assembly graph file is provided.")
-#     logger.info("Exiting GraphBin2... Bye...!")
-#     sys.exit(1)
+        while line != "":
 
-contigs_map = my_map
-contigs_map_rev = my_map.inverse
+            # Identify lines with link information
+            if "L" in line:
+                strings = line.split("\t")
 
-contig_names = my_names_map
-contig_names_rev = contig_names.inverse
+                f1, f2 = "", ""
+
+                if strings[2] == "+":
+                    f1 = strings[1][5:]
+                if strings[2] == "-":
+                    f1 = "-"+strings[1][5:]
+                if strings[4] == "+":
+                    f2 = strings[3][5:]
+                if strings[4] == "-":
+                    f2 = "-"+strings[3][5:]
+
+                links_map[f1].add(f2)
+                links_map[f2].add(f1)
+
+            line = file.readline()
+
+    # Create list of edges
+    edge_list = []
+
+    for i in paths:
+        segments = paths[i]
+
+        new_links = []
+
+        for segment in segments:
+            
+            my_segment = segment
+            my_segment_num = ""
+
+            my_segment_rev = ""
+
+            if my_segment.startswith("-"):
+                my_segment_rev = my_segment[1:]
+                my_segment_num = my_segment[1:]
+            else:
+                my_segment_rev = "-"+my_segment
+                my_segment_num = my_segment
+
+            if my_segment in links_map:
+                new_links.extend(list(links_map[my_segment]))
+
+            if my_segment_rev in links_map:
+                new_links.extend(list(links_map[my_segment_rev]))
+
+            if my_segment in segment_contigs:
+                for contig in segment_contigs[my_segment]:
+                    if i != contig:
+                        # Add edge to list of edges
+                        edge_list.append((i, contig))
+                        
+            if my_segment_rev in segment_contigs:
+                for contig in segment_contigs[my_segment_rev]:
+                    if i != contig:
+                        # Add edge to list of edges
+                        edge_list.append((i, contig))
+
+            if my_segment_num in segment_contigs:
+                for contig in segment_contigs[my_segment_num]:
+                    if i != contig:
+                        # Add edge to list of edges
+                        edge_list.append((i, contig))
+
+        for new_link in new_links:
+            if new_link in segment_contigs:
+                for contig in segment_contigs[new_link]:
+                    if i != contig:
+                        # Add edge to list of edges
+                        edge_list.append((i, contig))
+                        
+            if new_link.startswith("-"):
+                if new_link[1:] in segment_contigs:
+                    for contig in segment_contigs[new_link[1:]]:
+                        if i != contig:
+                            # Add edge to list of edges
+                            edge_list.append((i, contig))
+
+except:
+    logger.error("Please make sure that the correct path to the assembly graph file is provided.")
+    logger.info("Exiting GraphBin2... Bye...!")
+    sys.exit(1)
+
+node_count = len(contig_names_rev)
 
 logger.info("Total number of contigs available: "+str(node_count))
 
@@ -185,23 +298,13 @@ logger.info("Total number of contigs available: "+str(node_count))
 # Create the graph
 assembly_graph = Graph()
 
-# Create list of edges
-edge_list = []
-
 # Add vertices
 assembly_graph.add_vertices(node_count)
 
 # Name vertices
 for i in range(len(assembly_graph.vs)):
     assembly_graph.vs[i]["id"]= i
-    assembly_graph.vs[i]["label"]= str(contigs_map[i])
-
-# Iterate links
-for link in links:
-    # Remove self loops
-    if link[0] != link[1]:
-        # Add edge to list of edges
-        edge_list.append((contig_names_rev[link[0]], contig_names_rev[link[1]]))
+    assembly_graph.vs[i]["label"]= str(contig_names[i])
 
 # Add edges to the graph
 assembly_graph.add_edges(edge_list)
@@ -248,7 +351,7 @@ try:
         for row in readCSV:
             contig_num = contig_names_rev[row[0]]
             
-            bin_num = int(row[1])-1
+            bin_num = bins_list.index(row[1])
             bins[bin_num].append(contig_num)
 
     for i in range(n_bins):
@@ -321,7 +424,7 @@ def runBFS(node, threhold=depth):
                     contig_bin = n
                     break
             
-            labelled_nodes.add((node, active_node, contig_bin, depth[active_node], abs(coverages[contigs_map[node]]-coverages[contigs_map[active_node]])))
+            labelled_nodes.add((node, active_node, contig_bin, depth[active_node], distance.euclidean(coverages[node],coverages[active_node])))
             
         else:
             for neighbour in assembly_graph.neighbors(active_node, mode=ALL):
@@ -338,79 +441,79 @@ def runBFS(node, threhold=depth):
 # Remove labels of unsupported vertices
 #-----------------------------------------------------
 
-logger.info("Removing labels of unsupported vertices")
+# logger.info("Removing labels of unsupported vertices")
 
-iter_num = 1
+# iter_num = 1
 
-while True:
+# while True:
     
-    logger.debug("Iteration: "+str(iter_num))
+#     logger.debug("Iteration: "+str(iter_num))
     
-    remove_labels = {}
+#     remove_labels = {}
 
-    # Initialise progress bar
-    pbar = tqdm(total=len(binned_contigs))
+#     # Initialise progress bar
+#     pbar = tqdm(total=len(binned_contigs))
 
-    for my_node in binned_contigs:
+#     for my_node in binned_contigs:
 
-        if my_node not in isolated:
+#         if my_node not in isolated:
 
-            my_contig_bin = -1
+#             my_contig_bin = -1
 
-            # Get the bin of the current contig
-            for n in range(n_bins):
-                if my_node in bins[n]:
-                    my_contig_bin = n
-                    break    
+#             # Get the bin of the current contig
+#             for n in range(n_bins):
+#                 if my_node in bins[n]:
+#                     my_contig_bin = n
+#                     break    
 
-            BFS_labelled_nodes = list(runBFS(my_node))
+#             BFS_labelled_nodes = list(runBFS(my_node))
             
-            if len(BFS_labelled_nodes)>0:
+#             if len(BFS_labelled_nodes)>0:
 
-                # Get the count of nodes in the closest_neighbours that belongs to each bin
-                BFS_labelled_bin_counts = [0 for x in range(n_bins)]
+#                 # Get the count of nodes in the closest_neighbours that belongs to each bin
+#                 BFS_labelled_bin_counts = [0 for x in range(n_bins)]
 
-                for i in range(len(BFS_labelled_nodes)):
-                    BFS_labelled_bin_counts[BFS_labelled_nodes[i][2]] += 1
+#                 for i in range(len(BFS_labelled_nodes)):
+#                     BFS_labelled_bin_counts[BFS_labelled_nodes[i][2]] += 1
                 
-                zero_bin_count = 0
+#                 zero_bin_count = 0
 
-                # Count the number of bins which have no BFS_labelled_contigs
-                for j in BFS_labelled_bin_counts:
-                    if j == 0:
-                        zero_bin_count += 1
+#                 # Count the number of bins which have no BFS_labelled_contigs
+#                 for j in BFS_labelled_bin_counts:
+#                     if j == 0:
+#                         zero_bin_count += 1
 
-                # Get the bin number which contains the maximum number of BFS_labelled_contigs
-                max_index = BFS_labelled_bin_counts.index(max(BFS_labelled_bin_counts))
+#                 # Get the bin number which contains the maximum number of BFS_labelled_contigs
+#                 max_index = BFS_labelled_bin_counts.index(max(BFS_labelled_bin_counts))
                     
-                # If there are no BFS nodes of same label as contig, remove label
-                if my_contig_bin!=-1 and BFS_labelled_bin_counts[my_contig_bin]==0:
-                    remove_labels[my_node] = my_contig_bin
+#                 # If there are no BFS nodes of same label as contig, remove label
+#                 if my_contig_bin!=-1 and BFS_labelled_bin_counts[my_contig_bin]==0:
+#                     remove_labels[my_node] = my_contig_bin
                 
-                # Check if all the BFS_labelled_contigs are in one bin
-                elif zero_bin_count == (len(BFS_labelled_bin_counts)-1):
+#                 # Check if all the BFS_labelled_contigs are in one bin
+#                 elif zero_bin_count == (len(BFS_labelled_bin_counts)-1):
 
-                    # If contig is not in the bin with maximum number of BFS_labelled_contigs 
-                    if max_index!=my_contig_bin and BFS_labelled_bin_counts[max_index] > 1 and contig_lengths[contigs_map[my_node]]<10000:
-                        remove_labels[my_node] = my_contig_bin
+#                     # If contig is not in the bin with maximum number of BFS_labelled_contigs 
+#                     if max_index!=my_contig_bin and BFS_labelled_bin_counts[max_index] > 1 and contig_lengths[my_node]<10000:
+#                         remove_labels[my_node] = my_contig_bin
             
-         # Update progress bar
-        pbar.update(1)
+#          # Update progress bar
+#         pbar.update(1)
     
-    # Close progress bar
-    pbar.close()
+#     # Close progress bar
+#     pbar.close()
 
 
-    if len(remove_labels)==0:
-        break
-    else:
+#     if len(remove_labels)==0:
+#         break
+#     else:
         
-        for contig in remove_labels:
-            bins[remove_labels[contig]].remove(contig)
-            binned_contigs.remove(contig)
-            unbinned_contigs.append(contig)
+#         for contig in remove_labels:
+#             bins[remove_labels[contig]].remove(contig)
+#             binned_contigs.remove(contig)
+#             unbinned_contigs.append(contig)
     
-    iter_num += 1
+#     iter_num += 1
 
 
 
@@ -624,114 +727,114 @@ while sorted_node_list:
 pbar.close()
 
 
-# Determine contigs belonging to multiple bins
-#-----------------------------------------------------
+# # Determine contigs belonging to multiple bins
+# #-----------------------------------------------------
 
-logger.info("Determining multi-binned contigs")
+# logger.info("Determining multi-binned contigs")
 
-bin_cov_sum = [0 for x in range(n_bins)]
-bin_contig_len_total = [0 for x in range(n_bins)]
+# bin_cov_sum = [0 for x in range(n_bins)]
+# bin_contig_len_total = [0 for x in range(n_bins)]
 
-for i in range(n_bins):
-    for j in range(len(bins[i])):
-        if bins[i][j] in non_isolated:
-            bin_cov_sum[i] += coverages[contigs_map[bins[i][j]]]*contig_lengths[contigs_map[bins[i][j]]]
-            bin_contig_len_total[i] += contig_lengths[contigs_map[bins[i][j]]]
+# for i in range(n_bins):
+#     for j in range(len(bins[i])):
+#         if bins[i][j] in non_isolated:
+#             bin_cov_sum[i] += coverages[contigs_map[bins[i][j]]]*contig_lengths[contigs_map[bins[i][j]]]
+#             bin_contig_len_total[i] += contig_lengths[contigs_map[bins[i][j]]]
 
-def is_multi(contig):
-    if contig in non_isolated and contig in binned_contigs:
+# def is_multi(contig):
+#     if contig in non_isolated and contig in binned_contigs:
         
-        contig_bin = -1
+#         contig_bin = -1
 
-        # Get the bin of the current contig
-        for n in range(n_bins):
-            if contig in bins[n]:
-                contig_bin = n
-                break
+#         # Get the bin of the current contig
+#         for n in range(n_bins):
+#             if contig in bins[n]:
+#                 contig_bin = n
+#                 break
 
-        # Get average coverage of each connected component representing a bin excluding the contig
-        bin_coverages = list(bin_cov_sum)
-        bin_contig_lengths = list(bin_contig_len_total)
+#         # Get average coverage of each connected component representing a bin excluding the contig
+#         bin_coverages = list(bin_cov_sum)
+#         bin_contig_lengths = list(bin_contig_len_total)
 
-        bin_coverages[contig_bin] = bin_coverages[contig_bin] - (coverages[contigs_map[contig]]*contig_lengths[contigs_map[contig]])
-        bin_contig_lengths[contig_bin] = bin_contig_lengths[contig_bin] - contig_lengths[contigs_map[contig]]
+#         bin_coverages[contig_bin] = bin_coverages[contig_bin] - (coverages[contigs_map[contig]]*contig_lengths[contigs_map[contig]])
+#         bin_contig_lengths[contig_bin] = bin_contig_lengths[contig_bin] - contig_lengths[contigs_map[contig]]
 
-        for i in range(n_bins):
-            if bin_contig_lengths[i] != 0:
-                bin_coverages[i] = bin_coverages[i]/bin_contig_lengths[i]
+#         for i in range(n_bins):
+#             if bin_contig_lengths[i] != 0:
+#                 bin_coverages[i] = bin_coverages[i]/bin_contig_lengths[i]
 
-        # Get coverages of neighbours
-        neighbour_bins = [[] for x in range(n_bins)]
+#         # Get coverages of neighbours
+#         neighbour_bins = [[] for x in range(n_bins)]
 
-        neighbour_bin_coverages = [[] for x in range(n_bins)]
+#         neighbour_bin_coverages = [[] for x in range(n_bins)]
 
-        neighbours = assembly_graph.neighbors(contig, mode=ALL)
+#         neighbours = assembly_graph.neighbors(contig, mode=ALL)
 
-        for neighbour in neighbours:
+#         for neighbour in neighbours:
 
-            for n in range(n_bins):
-                if neighbour in bins[n]:
-                    neighbour_bins[n].append(neighbour)
-                    neighbour_bin_coverages[n].append(coverages[contigs_map[neighbour]])
-                    break
+#             for n in range(n_bins):
+#                 if neighbour in bins[n]:
+#                     neighbour_bins[n].append(neighbour)
+#                     neighbour_bin_coverages[n].append(coverages[contigs_map[neighbour]])
+#                     break
 
-        zero_bin_count = 0
+#         zero_bin_count = 0
 
-        non_zero_bins = []
+#         non_zero_bins = []
 
-        # Count the number of bins which have no labelled neighbouring contigs
-        for i in range(len(neighbour_bins)):
-            if len(neighbour_bins[i]) == 0:
-                zero_bin_count += 1
-            else:
-                non_zero_bins.append(i)
+#         # Count the number of bins which have no labelled neighbouring contigs
+#         for i in range(len(neighbour_bins)):
+#             if len(neighbour_bins[i]) == 0:
+#                 zero_bin_count += 1
+#             else:
+#                 non_zero_bins.append(i)
 
-        if zero_bin_count < n_bins-1:
+#         if zero_bin_count < n_bins-1:
 
-            bin_combinations = []
+#             bin_combinations = []
 
-            for i in range(len(non_zero_bins)):
-                bin_combinations += list(it.combinations(non_zero_bins, i+1))
+#             for i in range(len(non_zero_bins)):
+#                 bin_combinations += list(it.combinations(non_zero_bins, i+1))
 
-            min_diff = sys.maxsize
-            min_diff_combination = -1
+#             min_diff = sys.maxsize
+#             min_diff_combination = -1
 
-            for combination in bin_combinations:
+#             for combination in bin_combinations:
 
-                comb_cov_total = 0
+#                 comb_cov_total = 0
 
-                for i in range(len(combination)):
-                    comb_cov_total += bin_coverages[combination[i]]
+#                 for i in range(len(combination)):
+#                     comb_cov_total += bin_coverages[combination[i]]
 
-                cov_diff = abs(comb_cov_total-coverages[contigs_map[contig]])
+#                 cov_diff = abs(comb_cov_total-coverages[contigs_map[contig]])
 
-                if cov_diff < min_diff:
-                    min_diff = cov_diff
-                    min_diff_combination = combination
+#                 if cov_diff < min_diff:
+#                     min_diff = cov_diff
+#                     min_diff_combination = combination
 
-            if min_diff_combination!=-1 and len(min_diff_combination) > 1 and contig_lengths[contigs_map[contig]]>1000:
-                # return True
-                return contig, min_diff_combination
+#             if min_diff_combination!=-1 and len(min_diff_combination) > 1 and contig_lengths[contigs_map[contig]]>1000:
+#                 # return True
+#                 return contig, min_diff_combination
 
-    return None
+#     return None
 
-# Threads and multi-processing
-with Pool(nthreads) as p:
-    mapped = list(tqdm(p.imap(is_multi, list(range(node_count))), total=node_count))
+# # Threads and multi-processing
+# with Pool(nthreads) as p:
+#     mapped = list(tqdm(p.imap(is_multi, list(range(node_count))), total=node_count))
 
-multi_bins = list(filter(lambda x: x is not None, mapped))
+# multi_bins = list(filter(lambda x: x is not None, mapped))
 
-if len(multi_bins) == 0:
-    logger.info("No multi-labelled contigs were found")
-else:
-    logger.info("Found "+str(len(multi_bins))+" multi-labelled contigs ==>")
+# if len(multi_bins) == 0:
+#     logger.info("No multi-labelled contigs were found")
+# else:
+#     logger.info("Found "+str(len(multi_bins))+" multi-labelled contigs ==>")
 
-# Add contigs to multiplt bins
-for contig, min_diff_combination in multi_bins:
-    logger.info(contig_names[contig]+" belongs to bins "+', '.join(str(s+1) for s in min_diff_combination))
-    for mybin in min_diff_combination:
-        if contig not in bins[mybin]:
-            bins[mybin].append(contig)
+# # Add contigs to multiplt bins
+# for contig, min_diff_combination in multi_bins:
+#     logger.info(contig_names[contig]+" belongs to bins "+', '.join(str(s+1) for s in min_diff_combination))
+#     for mybin in min_diff_combination:
+#         if contig not in bins[mybin]:
+#             bins[mybin].append(contig)
 
 
 # Determine elapsed time
@@ -755,7 +858,7 @@ for i in range(node_count):
         if i in bins[k]:
             line = []
             line.append(contig_names[i])
-            line.append(k+1)
+            line.append(bins_list[k])
             output_bins.append(line)
 
 output_file = output_path + prefix + 'graphbin2_output.csv'
