@@ -282,4 +282,20 @@ GraphBin2 has been accepted for publication at the 20th International Workshop o
   doi =		{10.4230/LIPIcs.WABI.2020.8},
   annote =	{Keywords: Metagenomics binning, contigs, assembly graphs, overlapped binning}
 }
+
+@Article{Mallawaarachchi2021,
+  author={Mallawaarachchi, Vijini G. and Wickramarachchi, Anuradha S. and Lin, Yu},
+  title={Improving metagenomic binning results with overlapped bins using assembly graphs},
+  journal={Algorithms for Molecular Biology},
+  year={2021},
+  month={May},
+  day={04},
+  volume={16},
+  number={1},
+  pages={3},
+  abstract={Metagenomic sequencing allows us to study the structure, diversity and ecology in microbial communities without the necessity of obtaining pure cultures. In many metagenomics studies, the reads obtained from metagenomics sequencing are first assembled into longer contigs and these contigs are then binned into clusters of contigs where contigs in a cluster are expected to come from the same species. As different species may share common sequences in their genomes, one assembled contig may belong to multiple species. However, existing tools for binning contigs only support non-overlapped binning, i.e., each contig is assigned to at most one bin (species).},
+  issn={1748-7188},
+  doi={10.1186/s13015-021-00185-6},
+  url={https://doi.org/10.1186/s13015-021-00185-6}
+}
 ```
