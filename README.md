@@ -261,7 +261,7 @@ python graphbin2.py --assembler flye --contigs /path/to/edges.fasta --abundance 
 [7] Wu, Y.W., _et al._: MaxBin 2.0: an automated binning algorithm to recover genomes from multiple metagenomic datasets. Bioinformatics 32(4), 605–607 (2016)
 
 ## Citation
-GraphBin2 has been accepted for publication at the 20th International Workshop on Algorithms in Bioinformatics ([WABI 2020](http://algo2020.di.unipi.it/WABI2020/)) and is published in [Leibniz International Proceedings in Informatics (LIPIcs)](https://www.dagstuhl.de/dagpub/978-3-95977-161-0) DOI: [10.4230/LIPIcs.WABI.2020.8](https://doi.org/10.4230/LIPIcs.WABI.2020.8). If you use GraphBin2 in your work, please cite GraphBin2 as follows.
+GraphBin2 has been accepted for publication at the 20th International Workshop on Algorithms in Bioinformatics ([WABI 2020](http://algo2020.di.unipi.it/WABI2020/)) and is published in [Leibniz International Proceedings in Informatics (LIPIcs)](https://www.dagstuhl.de/dagpub/978-3-95977-161-0) DOI: [10.4230/LIPIcs.WABI.2020.8](https://doi.org/10.4230/LIPIcs.WABI.2020.8). If you use GraphBin2 in your work, please cite the following publications.
 
 ```bibtex
 @InProceedings{mallawaarachchi_et_al:LIPIcs:2020:12797,
