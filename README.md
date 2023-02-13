@@ -4,6 +4,8 @@
 
 # GraphBin2: Refined and Overlapped Binning of Metagenomic Contigs Using Assembly Graphs
 
+[![DOI](https://img.shields.io/badge/DOI-10.4230/LIPIcs.WABI.2020.8-informational)](https://doi.org/10.4230/LIPIcs.WABI.2020.8)
+[![DOI](https://img.shields.io/badge/DOI-10.1186/s13015--021--00185--6-yellow)](https://doi.org/10.1186/s13015-021-00185-6)
 ![GitHub](https://img.shields.io/github/license/Vini2/GraphBin2) 
 ![GitHub top language](https://img.shields.io/github/languages/top/Vini2/GraphBin2)
 ![GitHub top language](https://img.shields.io/github/v/release/Vini2/GraphBin2?include_prereleases)
