@@ -6,7 +6,10 @@
 
 [![DOI](https://img.shields.io/badge/DOI-10.4230/LIPIcs.WABI.2020.8-informational)](https://doi.org/10.4230/LIPIcs.WABI.2020.8)
 [![DOI](https://img.shields.io/badge/DOI-10.1186/s13015--021--00185--6-yellow)](https://doi.org/10.1186/s13015-021-00185-6)
-![GitHub](https://img.shields.io/github/license/Vini2/GraphBin2) 
+
+[![CI](https://github.com/metagentools/GraphBin2/actions/workflows/testing.yml/badge.svg)](https://github.com/metagentools/GraphBin2/actions/workflows/testing.yml)
+![GitHub](https://img.shields.io/github/license/Vini2/GraphBin2)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 ![GitHub top language](https://img.shields.io/github/languages/top/Vini2/GraphBin2)
 ![GitHub top language](https://img.shields.io/github/v/release/Vini2/GraphBin2?include_prereleases)
 
@@ -49,6 +52,12 @@ Once you have installed Conda, make sure you are in the GraphBin2 folder. Now ru
 ```
 conda env create -f environment.yml
 conda activate graphbin2
+```
+
+Now install GraphBin2 using
+
+```
+pip install -e .
 ```
 
 Now you are ready to run GraphBin2.
@@ -152,19 +161,19 @@ optional arguments:
 
 ## Input Format
 
-The SPAdes version of `graphbin2.py` takes in 4 files as inputs (required).
+The SPAdes version of `graphbin2` takes in 4 files as inputs (required).
 * Contigs file (in `.fasta` format)
 * Assembly graph file (in `.gfa` format)
 * Paths of contigs (in `.paths` format)
 * Binning output from an existing tool (in `.csv` format)
 
-The SGA version of `graphbin2.py` takes in 4 files as inputs (required).
+The SGA version of `graphbin2` takes in 4 files as inputs (required).
 * Contigs file (in `.fasta` format)
 * Abundance file (tab separated file with contig ID and coverage in each line)
 * Assembly graph file (in `.asqg` format)
 * Binning output from an existing tool (in `.csv` format)
 
-The Flye version of `graphbin2.py` takes in 4 files as inputs (required).
+The Flye version of `graphbin2` takes in 4 files as inputs (required).
 * Contigs file (in `.fasta` format)
 * Abundance file (tab separated file with contig ID and coverage in each line)
 * Assembly graph file (in `.gfa` format)
@@ -206,22 +215,22 @@ edge_5,2
 ...
 ```
 
-You can use the [`prepResult.py`](https://github.com/Vini2/GraphBin2/blob/master/support/prepResult.py) script to format an initial binning result in to the .csv format with contig identifiers and bin ID. Further details can be found [here](https://github.com/Vini2/GraphBin2/blob/master/support/README.md#prepresultpy).
+You can use the [`prepResult.py`](https://github.com/Vini2/GraphBin2/blob/master/src/support/prepResult.py) script to format an initial binning result in to the .csv format with contig identifiers and bin ID. Further details can be found [here](https://github.com/Vini2/GraphBin2/blob/master/src/support/README.md#prepresultpy).
 
 ### Before using Flye assemblies for binning
 
-Before using Flye assemblies for binning, please use the [`gfa2fasta.py`](https://github.com/Vini2/GraphBin2/blob/master/support/gfa2fasta.py) script to get the edge sequences. Further details can be found [here](https://github.com/Vini2/GraphBin2/blob/master/support/README.md#gfa2fastapy).
+Before using Flye assemblies for binning, please use the [`gfa2fasta.py`](https://github.com/Vini2/GraphBin2/blob/master/src/support/gfa2fasta.py) script to get the edge sequences. Further details can be found [here](https://github.com/Vini2/GraphBin2/blob/master/src/support/README.md#gfa2fastapy).
 
 ## Example Usage
 
 ```
-python graphbin2.py --assembler spades --contigs /path/to/contigs.fasta --graph /path/to/graph_file.gfa --paths /path/to/paths_file.paths --binned /path/to/binning_result.csv --output /path/to/output_folder
+graphbin2 --assembler spades --contigs /path/to/contigs.fasta --graph /path/to/graph_file.gfa --paths /path/to/paths_file.paths --binned /path/to/binning_result.csv --output /path/to/output_folder
 ```
 ```
-python graphbin2.py --assembler sga --contigs /path/to/contigs.fa --abundance /path/to/abundance.tsv --graph /path/to/graph_file.asqg --binned /path/to/binning_result.csv --output /path/to/output_folder
+graphbin2 --assembler sga --contigs /path/to/contigs.fa --abundance /path/to/abundance.tsv --graph /path/to/graph_file.asqg --binned /path/to/binning_result.csv --output /path/to/output_folder
 ```
 ```
-python graphbin2.py --assembler flye --contigs /path/to/edges.fasta --abundance /path/to/abundance.tsv --graph /path/to/graph_file.gfa --binned /path/to/binning_result.csv --output /path/to/output_folder
+graphbin2 --assembler flye --contigs /path/to/edges.fasta --abundance /path/to/abundance.tsv --graph /path/to/graph_file.gfa --binned /path/to/binning_result.csv --output /path/to/output_folder
 ```
 
 ## Visualization of the metaSPAdes Assembly Graph of the Sim-5G Dataset
