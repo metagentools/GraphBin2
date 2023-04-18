@@ -15,244 +15,250 @@ __maintainer__ = "Vijini Mallawaarachchi"
 __email__ = "vijini.mallawaarachchi@anu.edu.au"
 __status__ = "Stable Release"
 
-parser = argparse.ArgumentParser(description="""GraphBin2 Help. GraphBin2 is a tool which refines the binning results obtained from existing tools and, 
-more importantly, is able to assign contigs to multiple bins. GraphBin2 uses the connectivity and coverage information from assembly graphs to 
-adjust existing binning results on contigs and to infer contigs shared by multiple species.""")
+def main():
 
-parser.add_argument("--assembler", 
-                    required=True, 
-                    type=str,
-                    help="name of the assembler used (SPAdes, SGA or Flye)")
+    parser = argparse.ArgumentParser(description="""GraphBin2 Help. GraphBin2 is a tool which refines the binning results obtained from existing tools and, 
+    more importantly, is able to assign contigs to multiple bins. GraphBin2 uses the connectivity and coverage information from assembly graphs to 
+    adjust existing binning results on contigs and to infer contigs shared by multiple species.""")
 
-parser.add_argument("--graph", 
-                    required=True,
-                    type=str,
-                    help="path to the assembly graph file")
+    parser.add_argument("--assembler", 
+                        required=True, 
+                        type=str,
+                        help="name of the assembler used (SPAdes, SGA or Flye)")
 
-parser.add_argument("--contigs", 
-                    required=True,
-                    type=str,
-                    help="path to the contigs file")
+    parser.add_argument("--graph", 
+                        required=True,
+                        type=str,
+                        help="path to the assembly graph file")
 
-parser.add_argument("--paths", 
-                    required=False,
-                    type=str,
-                    help="path to the contigs.paths file")
+    parser.add_argument("--contigs", 
+                        required=True,
+                        type=str,
+                        help="path to the contigs file")
 
-parser.add_argument("--abundance", 
-                    required=False,
-                    type=str,
-                    help="path to the abundance file")
+    parser.add_argument("--paths", 
+                        required=False,
+                        type=str,
+                        help="path to the contigs.paths file")
 
-parser.add_argument("--binned", 
-                    required=True,
-                    type=str,
-                    help="path to the .csv file with the initial binning output from an existing tool")
+    parser.add_argument("--abundance", 
+                        required=False,
+                        type=str,
+                        help="path to the abundance file")
 
-parser.add_argument("--output", 
-                    required=True,
-                    type=str,
-                    help="path to the output folder")
+    parser.add_argument("--binned", 
+                        required=True,
+                        type=str,
+                        help="path to the .csv file with the initial binning output from an existing tool")
 
-parser.add_argument("--prefix", 
-                    required=False,
-                    type=str,
-                    default='',
-                    help="prefix for the output file")
+    parser.add_argument("--output", 
+                        required=True,
+                        type=str,
+                        help="path to the output folder")
 
-parser.add_argument("--depth", 
-                    required=False, 
-                    type=int, 
-                    default=5, 
-                    help="maximum depth for the breadth-first-search. [default: 5]")
+    parser.add_argument("--prefix", 
+                        required=False,
+                        type=str,
+                        default='',
+                        help="prefix for the output file")
 
-parser.add_argument("--threshold", 
-                    required=False, 
-                    type=float, 
-                    default=1.5, 
-                    help="threshold for determining inconsistent vertices. [default: 1.5]")
+    parser.add_argument("--depth", 
+                        required=False, 
+                        type=int, 
+                        default=5, 
+                        help="maximum depth for the breadth-first-search. [default: 5]")
 
-parser.add_argument("--delimiter", 
-                    required=False, 
-                    type=str, 
-                    default=",", 
-                    help="delimiter for input/output results. Supports a comma (,), a semicolon (;), a tab ($'\\t'), a space (\" \") and a pipe (|) [default: , (comma)]")
+    parser.add_argument("--threshold", 
+                        required=False, 
+                        type=float, 
+                        default=1.5, 
+                        help="threshold for determining inconsistent vertices. [default: 1.5]")
 
-parser.add_argument("--nthreads", 
-                    required=False, 
-                    type=int, 
-                    default=8, 
-                    help="number of threads to use. [default: 8]")
+    parser.add_argument("--delimiter", 
+                        required=False, 
+                        type=str, 
+                        default=",", 
+                        help="delimiter for input/output results. Supports a comma (,), a semicolon (;), a tab ($'\\t'), a space (\" \") and a pipe (|) [default: , (comma)]")
 
-args = vars(parser.parse_args())
+    parser.add_argument("--nthreads", 
+                        required=False, 
+                        type=int, 
+                        default=8, 
+                        help="number of threads to use. [default: 8]")
 
-
-assembler = args["assembler"]
-assembly_graph_file = args["graph"]
-contigs = args["contigs"]
-contig_paths = args["paths"]
-abundance = args["abundance"]
-contig_bins_file = args["binned"]
-output_path = args["output"]
-prefix = args["prefix"]
-depth = args["depth"]
-threshold = args["threshold"]
-delimiter = args["delimiter"]
-nthreads = args["nthreads"]
+    args = vars(parser.parse_args())
 
 
-# Validation of inputs
-#---------------------------------------------------
+    assembler = args["assembler"]
+    assembly_graph_file = args["graph"]
+    contigs = args["contigs"]
+    contig_paths = args["paths"]
+    abundance = args["abundance"]
+    contig_bins_file = args["binned"]
+    output_path = args["output"]
+    prefix = args["prefix"]
+    depth = args["depth"]
+    threshold = args["threshold"]
+    delimiter = args["delimiter"]
+    nthreads = args["nthreads"]
 
-# Check assembler type
-if not (assembler.lower() == "spades" or assembler.lower() == "sga" or assembler.lower() == "flye"):
-    print("\nPlease make sure to provide the correct assembler type (SPAdes, SGA or Flye).")
-    print("Exiting GraphBin2...\nBye...!\n")
-    sys.exit(1)
 
-# Check assembly graph file
-if not os.path.isfile(assembly_graph_file):
-    print("\nFailed to open the assembly graph file.")
-    print("Exiting GraphBin2...\nBye...!\n")
-    sys.exit(1)
+    # Validation of inputs
+    #---------------------------------------------------
 
-# Check contigs file
-if not os.path.isfile(contigs):
-    print("\nFailed to open the contigs file.")
-    print("Exiting GraphBin2...\nBye...!\n")
-    sys.exit(1)
+    # Check assembler type
+    if not (assembler.lower() == "spades" or assembler.lower() == "sga" or assembler.lower() == "flye"):
+        print("\nPlease make sure to provide the correct assembler type (SPAdes, SGA or Flye).")
+        print("Exiting GraphBin2...\nBye...!\n")
+        sys.exit(1)
 
-# Check if paths file is provided when the assembler type is SPAdes
-if assembler.lower() == "spades" and contig_paths is None:
-    print("\nPlease make sure to provide the path to the contigs.paths file.")
-    print("Exiting GraphBin2...\nBye...!\n")
-    sys.exit(1)
+    # Check assembly graph file
+    if not os.path.isfile(assembly_graph_file):
+        print("\nFailed to open the assembly graph file.")
+        print("Exiting GraphBin2...\nBye...!\n")
+        sys.exit(1)
 
-# Check contigs.paths file for SPAdes
-if assembler.lower() == "spades" and not os.path.isfile(contig_paths):
-    print("\nFailed to open the contigs.paths file.")
-    print("Exiting GraphBin2...\nBye...!\n")
-    sys.exit(1)
+    # Check contigs file
+    if not os.path.isfile(contigs):
+        print("\nFailed to open the contigs file.")
+        print("Exiting GraphBin2...\nBye...!\n")
+        sys.exit(1)
 
-# Check if abundance file is provided when the assembler type is SGA
-if assembler.lower() == "sga" and abundance is None:
-    print("\nPlease make sure to provide the path to the abundance file.")
-    print("Exiting GraphBin2...\nBye...!\n")
-    sys.exit(1)
+    # Check if paths file is provided when the assembler type is SPAdes
+    if assembler.lower() == "spades" and contig_paths is None:
+        print("\nPlease make sure to provide the path to the contigs.paths file.")
+        print("Exiting GraphBin2...\nBye...!\n")
+        sys.exit(1)
 
-# Check abundance file for SGA
-if assembler.lower() == "sga" and not os.path.isfile(abundance):
-    print("\nFailed to open the abundance file.")
-    print("Exiting GraphBin2...\nBye...!\n")
-    sys.exit(1)
+    # Check contigs.paths file for SPAdes
+    if assembler.lower() == "spades" and not os.path.isfile(contig_paths):
+        print("\nFailed to open the contigs.paths file.")
+        print("Exiting GraphBin2...\nBye...!\n")
+        sys.exit(1)
 
-# Check if abundance file is provided when the assembler type is Flye
-if assembler.lower() == "flye" and abundance is None:
-    print("\nPlease make sure to provide the path to the abundance file.")
-    print("Exiting GraphBin2...\nBye...!\n")
-    sys.exit(1)
+    # Check if abundance file is provided when the assembler type is SGA
+    if assembler.lower() == "sga" and abundance is None:
+        print("\nPlease make sure to provide the path to the abundance file.")
+        print("Exiting GraphBin2...\nBye...!\n")
+        sys.exit(1)
 
-# Check abundance file for Flye
-if assembler.lower() == "flye" and not os.path.isfile(abundance):
-    print("\nFailed to open the abundance file.")
-    print("Exiting GraphBin2...\nBye...!\n")
-    sys.exit(1)
+    # Check abundance file for SGA
+    if assembler.lower() == "sga" and not os.path.isfile(abundance):
+        print("\nFailed to open the abundance file.")
+        print("Exiting GraphBin2...\nBye...!\n")
+        sys.exit(1)
 
-# Check the file with the initial binning output
-if not os.path.isfile(contig_bins_file):
-    print("\nFailed to open the file with the initial binning output.")
-    print("Exiting GraphBin2...\nBye...!\n")
-    sys.exit(1)
+    # Check if abundance file is provided when the assembler type is Flye
+    if assembler.lower() == "flye" and abundance is None:
+        print("\nPlease make sure to provide the path to the abundance file.")
+        print("Exiting GraphBin2...\nBye...!\n")
+        sys.exit(1)
 
-# Handle for missing trailing forwardslash in output folder path
-if output_path[-1:] != "/":
-    output_path = output_path + "/"
+    # Check abundance file for Flye
+    if assembler.lower() == "flye" and not os.path.isfile(abundance):
+        print("\nFailed to open the abundance file.")
+        print("Exiting GraphBin2...\nBye...!\n")
+        sys.exit(1)
 
-# Create output folder if it does not exist
-if not os.path.isdir(output_path):
-    subprocess.run("mkdir -p "+output_path, shell=True)
+    # Check the file with the initial binning output
+    if not os.path.isfile(contig_bins_file):
+        print("\nFailed to open the file with the initial binning output.")
+        print("Exiting GraphBin2...\nBye...!\n")
+        sys.exit(1)
 
-# Validate prefix
-if args["prefix"] != '':
-    if args["prefix"].endswith("_"):
-        prefix = args["prefix"]
+    # Handle for missing trailing forwardslash in output folder path
+    if output_path[-1:] != "/":
+        output_path = output_path + "/"
+
+    # Create output folder if it does not exist
+    if not os.path.isdir(output_path):
+        subprocess.run("mkdir -p "+output_path, shell=True)
+
+    # Validate prefix
+    if args["prefix"] != '':
+        if args["prefix"].endswith("_"):
+            prefix = args["prefix"]
+        else:
+            prefix = args["prefix"]+"_"
     else:
-        prefix = args["prefix"]+"_"
-else:
-    prefix = ''
+        prefix = ''
 
-# Validate depth
-if depth < 1:
-    print("\nPlease enter a valid number for depth")
-    print("Exiting GraphBin2...\nBye...!\n")
-    sys.exit(1)
+    # Validate depth
+    if depth < 1:
+        print("\nPlease enter a valid number for depth")
+        print("Exiting GraphBin2...\nBye...!\n")
+        sys.exit(1)
 
-# Validate threshold
-if threshold < 1.0:
-    print("\nPlease enter a valid number for threshold")
-    print("Exiting GraphBin2...\nBye...!\n")
-    sys.exit(1)
+    # Validate threshold
+    if threshold < 1.0:
+        print("\nPlease enter a valid number for threshold")
+        print("Exiting GraphBin2...\nBye...!\n")
+        sys.exit(1)
 
-# Validate delimiter
-delimiters = [",", ";", " ", "\t", "|"]
+    # Validate delimiter
+    delimiters = [",", ";", " ", "\t", "|"]
 
-if delimiter not in delimiters:
-    print("\nPlease enter a valid delimiter")
-    print("Exiting GraphBin2...\nBye...!\n")
-    sys.exit(1)
+    if delimiter not in delimiters:
+        print("\nPlease enter a valid delimiter")
+        print("Exiting GraphBin2...\nBye...!\n")
+        sys.exit(1)
 
 
-# Validate number of threads
-if nthreads <= 0:
-    print("\nPlease enter a valid number for the number of threads")
-    print("Exiting GraphBin2...\nBye...!\n")
-    sys.exit(1)
+    # Validate number of threads
+    if nthreads <= 0:
+        print("\nPlease enter a valid number for the number of threads")
+        print("Exiting GraphBin2...\nBye...!\n")
+        sys.exit(1)
 
 
-# Run GraphBin2
-#---------------------------------------------------
-if assembler.lower() == "spades":
-    cmdGraphBin2 = """python "{0}/src/graphbin2_SPAdes.py" --graph "{1}" --contigs "{2}" --paths "{3}" --binned "{4}" --output "{5}" --prefix "{6}" --depth "{7}" --threshold "{8}" --delimiter "{9}" --nthreads "{10}" """.format(
-        os.path.dirname(__file__), 
-        assembly_graph_file,
-        contigs,
-        contig_paths, 
-        contig_bins_file, 
-        output_path,
-        prefix,
-        depth,
-        threshold,
-        delimiter,
-        nthreads)
+    # Run GraphBin2
+    #---------------------------------------------------
+    if assembler.lower() == "spades":
+        cmdGraphBin2 = """python "{0}/src/graphbin2_SPAdes.py" --graph "{1}" --contigs "{2}" --paths "{3}" --binned "{4}" --output "{5}" --prefix "{6}" --depth "{7}" --threshold "{8}" --delimiter "{9}" --nthreads "{10}" """.format(
+            os.path.dirname(__file__), 
+            assembly_graph_file,
+            contigs,
+            contig_paths, 
+            contig_bins_file, 
+            output_path,
+            prefix,
+            depth,
+            threshold,
+            delimiter,
+            nthreads)
 
-elif assembler.lower() == "sga":
-    cmdGraphBin2 = """python "{0}/src/graphbin2_SGA.py" --graph "{1}" --contigs "{2}" --binned "{3}" --abundance "{4}" --output "{5}" --prefix "{6}" --depth "{7}" --threshold "{8}" --delimiter "{9}"  --nthreads "{10}" """.format(
-        os.path.dirname(__file__), 
-        assembly_graph_file,
-        contigs,
-        contig_bins_file, 
-        abundance,
-        output_path,
-        prefix,
-        depth,
-        threshold,
-        delimiter,
-        nthreads)
+    elif assembler.lower() == "sga":
+        cmdGraphBin2 = """python "{0}/src/graphbin2_SGA.py" --graph "{1}" --contigs "{2}" --binned "{3}" --abundance "{4}" --output "{5}" --prefix "{6}" --depth "{7}" --threshold "{8}" --delimiter "{9}"  --nthreads "{10}" """.format(
+            os.path.dirname(__file__), 
+            assembly_graph_file,
+            contigs,
+            contig_bins_file, 
+            abundance,
+            output_path,
+            prefix,
+            depth,
+            threshold,
+            delimiter,
+            nthreads)
 
-elif assembler.lower() == "flye":
-    cmdGraphBin2 = """python "{0}/src/graphbin2_Flye.py" --graph "{1}" --contigs "{2}" --paths "{3}" --binned "{4}" --abundance "{5}" --output "{6}" --prefix "{7}" --depth "{8}" --threshold "{9}" --delimiter "{10}"  --nthreads "{11}" """.format(
-        os.path.dirname(__file__), 
-        assembly_graph_file,
-        contigs,
-        contig_paths,
-        contig_bins_file, 
-        abundance,
-        output_path,
-        prefix,
-        depth,
-        threshold,
-        delimiter,
-        nthreads)
+    elif assembler.lower() == "flye":
+        cmdGraphBin2 = """python "{0}/src/graphbin2_Flye.py" --graph "{1}" --contigs "{2}" --paths "{3}" --binned "{4}" --abundance "{5}" --output "{6}" --prefix "{7}" --depth "{8}" --threshold "{9}" --delimiter "{10}"  --nthreads "{11}" """.format(
+            os.path.dirname(__file__), 
+            assembly_graph_file,
+            contigs,
+            contig_paths,
+            contig_bins_file, 
+            abundance,
+            output_path,
+            prefix,
+            depth,
+            threshold,
+            delimiter,
+            nthreads)
 
 
-os.system(cmdGraphBin2)
+    os.system(cmdGraphBin2)
+
+
+if __name__ == "__main__":
+    main()
