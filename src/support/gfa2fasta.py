@@ -16,7 +16,7 @@ from Bio.SeqRecord import SeqRecord
 
 __author__ = "Vijini Mallawaarachchi, Anuradha Wickramarachchi, and Yu Lin"
 __copyright__ = "Copyright 2020, GraphBin2 Project"
-__license__ = "GPL"
+__license__ = "BSD"
 __type__ = "Support Script"
 __maintainer__ = "Vijini Mallawaarachchi"
 __email__ = "vijini.mallawaarachchi@anu.edu.au"
