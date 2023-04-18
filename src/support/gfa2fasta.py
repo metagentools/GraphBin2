@@ -19,7 +19,7 @@ __copyright__ = "Copyright 2020, GraphBin2 Project"
 __license__ = "BSD"
 __type__ = "Support Script"
 __maintainer__ = "Vijini Mallawaarachchi"
-__email__ = "vijini.mallawaarachchi@anu.edu.au"
+__email__ = "viji.mallawaarachchi@gmail.com"
 
 
 # Sample command
