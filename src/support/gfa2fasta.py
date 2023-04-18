@@ -8,6 +8,7 @@ import sys
 import os
 import argparse
 import re
+import subprocess
 
 from Bio import SeqIO
 from Bio.Seq import Seq
