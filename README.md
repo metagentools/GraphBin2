@@ -310,3 +310,11 @@ GraphBin2 has been accepted for publication at the 20th International Workshop o
   url={https://doi.org/10.1186/s13015-021-00185-6}
 }
 ```
+
+## Funding
+
+GraphBin2 is funded by an [Essential Open Source Software for Science Grant](https://chanzuckerberg.com/eoss/proposals/cogent3-python-apis-for-iq-tree-and-graphbin-via-a-plug-in-architecture/) from the Chan Zuckerberg Initiative.
+
+<p align="left">
+  <img src="https://raw.githubusercontent.com/metagentools/GraphBin2/master/images/czi-logo.png" width="300">
+</p>
