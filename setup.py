@@ -44,7 +44,9 @@ setuptools.setup(
     install_requires=[
         "biopython",
         "python-igraph",
+        "scipy",
         "tqdm",
+        "click",
     ],
     python_requires=">=3.7",
 )
