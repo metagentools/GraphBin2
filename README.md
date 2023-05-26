@@ -10,8 +10,7 @@
 [![CI](https://github.com/metagentools/GraphBin2/actions/workflows/testing.yml/badge.svg)](https://github.com/metagentools/GraphBin2/actions/workflows/testing.yml)
 ![GitHub](https://img.shields.io/github/license/Vini2/GraphBin2)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-![GitHub top language](https://img.shields.io/github/languages/top/Vini2/GraphBin2)
-![GitHub top language](https://img.shields.io/github/v/release/Vini2/GraphBin2?include_prereleases)
+[![CodeQL](https://github.com/metagentools/GraphBin2/actions/workflows/codeql.yml/badge.svg)](https://github.com/metagentools/GraphBin2/actions/workflows/codeql.yml)
 
 GraphBin2 is an extension of [GraphBin](https://github.com/Vini2/GraphBin) which refines the binning results obtained from existing tools and, more importantly, is able to assign contigs to multiple bins. GraphBin2 uses the connectivity and coverage information from assembly graphs to adjust existing binning results on contigs and to infer contigs shared by multiple species.
 
