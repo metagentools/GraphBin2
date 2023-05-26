@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="GraphBin2_Logo.png" width="450" title="GraphBin2 Logo" alt="GraphBin2 Logo">
+  <img src="https://raw.githubusercontent.com/metagentools/GraphBin/master/GraphBin2_Logo.png" width="450" title="GraphBin2 Logo" alt="GraphBin2 Logo">
 </p>
 
 # GraphBin2: Refined and Overlapped Binning of Metagenomic Contigs Using Assembly Graphs
@@ -236,22 +236,22 @@ graphbin2 --assembler flye --contigs /path/to/edges.fasta --abundance /path/to/a
 
 ### Initial Binning Result
 <p align="center">
-  <img src="images/initial_binning_result.svg" width="500" title="Initial assembly graph" alt="Initial binning result">
+  <img src="https://raw.githubusercontent.com/metagentools/GraphBin/master/images/initial_binning_result.svg" width="500" title="Initial assembly graph" alt="Initial binning result">
 </p>
 
 ### Assembly Graph with Refined Labels
 <p align="center">
-  <img src="images/label_refined.svg" width="500" title="Initial assembly graph" alt="Labels refined">
+  <img src="https://raw.githubusercontent.com/metagentools/GraphBin/master/images/label_refined.svg" width="500" title="Initial assembly graph" alt="Labels refined">
 </p>
 
 ### Assembly Graph after Label Propagation
 <p align="center">
-  <img src="images/label_propagated.svg" width="500" title="Initial assembly graph" alt="Labels propagated">
+  <img src="https://raw.githubusercontent.com/metagentools/GraphBin/master/images/label_propagated.svg" width="500" title="Initial assembly graph" alt="Labels propagated">
 </p>
 
 ### Assembly Graph with Multi-labelled Vertices
 <p align="center">
-  <img src="images/multiple_marked.svg" width="500" title="Initial assembly graph" alt="Multi-labelled">
+  <img src="https://raw.githubusercontent.com/metagentools/GraphBin/master/images/multiple_marked.svg" width="500" title="Initial assembly graph" alt="Multi-labelled">
 </p>
 
 ## References
