@@ -13,7 +13,7 @@ from multiprocessing import Pool
 from Bio import SeqIO
 from igraph import *
 from collections import defaultdict
-from bidirectionalmap.bidirectionalmap import BidirectionalMap
+from .bidirectionalmap.bidirectionalmap import BidirectionalMap
 from tqdm import tqdm
 
 

@@ -14,7 +14,7 @@ from Bio import SeqIO
 from igraph import *
 from collections import defaultdict
 from scipy.spatial import distance
-from bidirectionalmap.bidirectionalmap import BidirectionalMap
+from .bidirectionalmap.bidirectionalmap import BidirectionalMap
 from tqdm import tqdm
 
 VERY_SMALL_VAL = 0.0001
