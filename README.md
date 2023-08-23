@@ -6,6 +6,7 @@
 
 [![DOI](https://img.shields.io/badge/DOI-10.4230/LIPIcs.WABI.2020.8-informational)](https://doi.org/10.4230/LIPIcs.WABI.2020.8)
 [![DOI](https://img.shields.io/badge/DOI-10.1186/s13015--021--00185--6-yellow)](https://doi.org/10.1186/s13015-021-00185-6)
+[![DOI](https://zenodo.org/badge/262936904.svg)](https://zenodo.org/badge/latestdoi/262936904)
 
 [![CI](https://github.com/metagentools/GraphBin2/actions/workflows/testing.yml/badge.svg)](https://github.com/metagentools/GraphBin2/actions/workflows/testing.yml)
 ![GitHub](https://img.shields.io/github/license/Vini2/GraphBin2)
@@ -121,41 +122,38 @@ python SolidBin.py --contig_file /path/to/contigs.fasta --composition_profiles /
 You can see the usage options of GraphBin2 by typing `./graphbin2 -h` on the command line. For example,
 
 ```
-usage: graphbin2 [-h] --assembler ASSEMBLER --graph GRAPH --contigs CONTIGS                 
-                 [--paths PATHS] [--abundance ABUNDANCE] --binned BINNED                 
-                 --output OUTPUT [--prefix PREFIX] [--depth DEPTH]
-                 [--threshold THRESHOLD] [--delimiter DELIMITER]
-                 [--nthreads NTHREADS]
+Usage: graphbin2 [OPTIONS]
 
-GraphBin2 Help. GraphBin2 is a tool which refines the binning results obtained
-from existing tools and, more importantly, is able to assign contigs to
-multiple bins. GraphBin2 uses the connectivity and coverage information from
-assembly graphs to adjust existing binning results on contigs and to infer
-contigs shared by multiple species.
+  GraphBin2: Refined and Overlapped Binning of Metagenomic Contigs Using
+  Assembly Graphs GraphBin2 is a tool which refines the binning results
+  obtained from existing tools and, is able to  assign contigs to multiple
+  bins. GraphBin2 uses the connectivity and coverage information from
+  assembly graphs to adjust existing binning results on contigs and to infer
+  contigs shared by multiple species.
 
-optional arguments:
-  -h, --help            show this help message and exit
-  --assembler ASSEMBLER
-                        name of the assembler used (SPAdes, SGA or Flye)
-  --graph GRAPH         path to the assembly graph file
-  --contigs CONTIGS     path to the contigs file
-  --paths PATHS         path to the contigs.paths file
-  --abundance ABUNDANCE
-                        path to the abundance file
-  --binned BINNED       path to the .csv file with the initial binning output
-                        from an existing tool
-  --output OUTPUT       path to the output folder
-  --prefix PREFIX       prefix for the output file
-  --depth DEPTH         maximum depth for the breadth-first-search. [default:
-                        5]
-  --threshold THRESHOLD
-                        threshold for determining inconsistent vertices.
-                        [default: 1.5]
-  --delimiter DELIMITER
-                        delimiter for input/output results. Supports a comma
-                        (,), a semicolon (;), a tab ($'\t'), a space (" ") and
-                        a pipe (|) [default: , (comma)]
-  --nthreads NTHREADS   number of threads to use. [default: 8]
+Options:
+  --assembler [spades|sga|flye]  name of the assembler used. (Supports SPAdes,
+                                 SGA and Flye)  [required]
+  --graph PATH                   path to the assembly graph file  [required]
+  --contigs PATH                 path to the contigs file  [required]
+  --paths PATH                   path to the contigs.paths (metaSPAdes) or
+                                 assembly.info (metaFlye) file
+  --abundance PATH               path to the abundance file  [required]
+  --binned PATH                  path to the .csv file with the initial
+                                 binning output from an existing toole
+                                 [required]
+  --output PATH                  path to the output folder  [required]
+  --prefix TEXT                  prefix for the output file
+  --depth INTEGER                maximum depth for the breadth-first-search.
+                                 [default: 5]
+  --threshold FLOAT              threshold for determining inconsistent
+                                 vertices.  [default: 1.5]
+  --delimiter [,|;|$'\t'|" "]    delimiter for output results. Supports a
+                                 comma (,), a semicolon (;), a tab ($'\t'), a
+                                 space (" ") and a pipe (|) .  [default: ,]
+  --nthreads INTEGER             number of threads to use.  [default: 8]
+  -v, --version                  Show the version and exit.
+  --help                         Show this message and exit.
 ```
 
 ## Input Format
@@ -236,22 +234,22 @@ graphbin2 --assembler flye --contigs /path/to/edges.fasta --abundance /path/to/a
 
 ### Initial Binning Result
 <p align="center">
-  <img src="https://raw.githubusercontent.com/metagentools/GraphBin/master/images/initial_binning_result.svg" width="500" title="Initial assembly graph" alt="Initial binning result">
+  <img src="https://raw.githubusercontent.com/metagentools/GraphBin2/master/images/initial_binning_result.svg" width="500" title="Initial assembly graph" alt="Initial binning result">
 </p>
 
 ### Assembly Graph with Refined Labels
 <p align="center">
-  <img src="https://raw.githubusercontent.com/metagentools/GraphBin/master/images/label_refined.svg" width="500" title="Initial assembly graph" alt="Labels refined">
+  <img src="https://raw.githubusercontent.com/metagentools/GraphBin2/master/images/label_refined.svg" width="500" title="Initial assembly graph" alt="Labels refined">
 </p>
 
 ### Assembly Graph after Label Propagation
 <p align="center">
-  <img src="https://raw.githubusercontent.com/metagentools/GraphBin/master/images/label_propagated.svg" width="500" title="Initial assembly graph" alt="Labels propagated">
+  <img src="https://raw.githubusercontent.com/metagentools/GraphBin2/master/images/label_propagated.svg" width="500" title="Initial assembly graph" alt="Labels propagated">
 </p>
 
 ### Assembly Graph with Multi-labelled Vertices
 <p align="center">
-  <img src="https://raw.githubusercontent.com/metagentools/GraphBin/master/images/multiple_marked.svg" width="500" title="Initial assembly graph" alt="Multi-labelled">
+  <img src="https://raw.githubusercontent.com/metagentools/GraphBin2/master/images/multiple_marked.svg" width="500" title="Initial assembly graph" alt="Multi-labelled">
 </p>
 
 ## References
