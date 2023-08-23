@@ -9,7 +9,7 @@ import heapq
 import itertools as it
 import logging
 
-from multiprocessing import Pool
+import concurrent.futures
 from Bio import SeqIO
 from igraph import *
 from collections import defaultdict
@@ -17,38 +17,21 @@ from .bidirectionalmap.bidirectionalmap import BidirectionalMap
 from tqdm import tqdm
 
 
-def main():
+def run(args):
 
-    # Setup argument parser
+    # Get arguments
     #---------------------------------------------------
 
-    ap = argparse.ArgumentParser(description="""GraphBin2 Help. GraphBin2 is a tool which refines the binning results obtained from existing tools and, 
-    more importantly, is able to assign contigs to multiple bins. GraphBin2 uses the connectivity and coverage information from assembly graphs to 
-    adjust existing binning results on contigs and to infer contigs shared by multiple species.""")
-
-    ap.add_argument("--contigs", required=True, help="path to the contigs file")
-    ap.add_argument("--abundance", required=True, help="path to the abundance file")
-    ap.add_argument("--graph", required=True, help="path to the assembly graph file")
-    ap.add_argument("--binned", required=True, help="path to the .csv file with the initial binning output from an existing tool")
-    ap.add_argument("--output", required=True, help="path to the output folder")
-    ap.add_argument("--prefix", required=False, default='', help="prefix for the output file")
-    ap.add_argument("--depth", required=False, type=int, default=5, help="maximum depth for the breadth-first-search. [default: 5]")
-    ap.add_argument("--threshold", required=False, type=float, default=1.5, help="threshold for determining inconsistent vertices. [default: 1.5]")
-    ap.add_argument("--delimiter", required=False, type=str, default=",", help="delimiter for input/output results [default: , (comma)]")
-    ap.add_argument("--nthreads", required=False, type=int, default=8, help="number of threads to use. [default: 8]")
-
-    args = vars(ap.parse_args())
-
-    contigs_file = args["contigs"]
-    abundance_file = args["abundance"]
-    assembly_graph_file = args["graph"]
-    contig_bins_file = args["binned"]
-    output_path = args["output"]
-    prefix = args["prefix"]
-    depth = args["depth"]
-    threshold = args["threshold"]
-    delimiter = args["delimiter"]
-    nthreads = args["nthreads"]
+    contigs_file = args.contigs
+    assembly_graph_file = args.graph
+    abundance_file = args.abundance
+    contig_bins_file = args.binned
+    output_path = args.output
+    prefix = args.prefix
+    depth = args.depth
+    threshold = args.threshold
+    delimiter = args.delimiter
+    nthreads = args.nthreads
 
     n_bins = 0
 
@@ -629,86 +612,67 @@ def main():
                 bin_cov_sum[i] += coverages[contigs_map[bins[i][j]]]*contig_lengths[contigs_map[bins[i][j]]]
                 bin_contig_len_total[i] += contig_lengths[contigs_map[bins[i][j]]]
 
-    def is_multi(contig):
-        if contig in non_isolated and contig in binned_contigs:
-            
-            contig_bin = -1
 
-            # Get the bin of the current contig
-            for n in range(n_bins):
-                if contig in bins[n]:
-                    contig_bin = n
-                    break
+    mapped = [None for itr in range(node_count)]
 
-            # Get average coverage of each connected component representing a bin excluding the contig
-            bin_coverages = list(bin_cov_sum)
-            bin_contig_lengths = list(bin_contig_len_total)
+    executor = concurrent.futures.ThreadPoolExecutor(max_workers=nthreads)
 
-            bin_coverages[contig_bin] = bin_coverages[contig_bin] - (coverages[contigs_map[contig]]*contig_lengths[contigs_map[contig]])
-            bin_contig_lengths[contig_bin] = bin_contig_lengths[contig_bin] - contig_lengths[contigs_map[contig]]
+    # Thread function
+    def thread_function(
+        n,
+        non_isolated,
+        binned_contigs,
+        n_bins,
+        bins,
+        bin_cov_sum,
+        bin_contig_len_total,
+        coverages,
+        contigs_map,
+        contig_lengths,
+        assembly_graph
+    ):
+        bin_result = is_multi(
+            contig=n, 
+            non_isolated=non_isolated,
+            binned_contigs=binned_contigs,
+            n_bins=n_bins,
+            bins=bins,
+            bin_cov_sum=bin_cov_sum,
+            bin_contig_len_total=bin_contig_len_total,
+            coverages=coverages,
+            contigs_map=contigs_map,
+            contig_lengths=contig_lengths,
+            assembly_graph=assembly_graph
+        )
+        mapped[n] = bin_result
 
-            for i in range(n_bins):
-                if bin_contig_lengths[i] != 0:
-                    bin_coverages[i] = bin_coverages[i]/bin_contig_lengths[i]
+    # Set up execution args for thread function
+    exec_args = []
 
-            # Get coverages of neighbours
-            neighbour_bins = [[] for x in range(n_bins)]
+    for n in range(node_count):
+        exec_args.append(
+            (
+                n,
+                non_isolated,
+                binned_contigs,
+                n_bins,
+                bins,
+                bin_cov_sum,
+                bin_contig_len_total,
+                coverages,
+                contigs_map,
+                contig_lengths,
+                assembly_graph
+            )
+        )
+    
+    # Thread executor
+    for itr in tqdm(
+        executor.map(lambda p: thread_function(*p), exec_args), total=node_count
+    ):
+        pass
 
-            neighbour_bin_coverages = [[] for x in range(n_bins)]
-
-            neighbours = assembly_graph.neighbors(contig, mode=ALL)
-
-            for neighbour in neighbours:
-
-                for n in range(n_bins):
-                    if neighbour in bins[n]:
-                        neighbour_bins[n].append(neighbour)
-                        neighbour_bin_coverages[n].append(coverages[contigs_map[neighbour]])
-                        break
-
-            zero_bin_count = 0
-
-            non_zero_bins = []
-
-            # Count the number of bins which have no labelled neighbouring contigs
-            for i in range(len(neighbour_bins)):
-                if len(neighbour_bins[i]) == 0:
-                    zero_bin_count += 1
-                else:
-                    non_zero_bins.append(i)
-
-            if zero_bin_count < n_bins-1:
-
-                bin_combinations = []
-
-                for i in range(len(non_zero_bins)):
-                    bin_combinations += list(it.combinations(non_zero_bins, i+1))
-
-                min_diff = sys.maxsize
-                min_diff_combination = -1
-
-                for combination in bin_combinations:
-
-                    comb_cov_total = 0
-
-                    for i in range(len(combination)):
-                        comb_cov_total += bin_coverages[combination[i]]
-
-                    cov_diff = abs(comb_cov_total-coverages[contigs_map[contig]])
-
-                    if cov_diff < min_diff:
-                        min_diff = cov_diff
-                        min_diff_combination = combination
-
-                if min_diff_combination!=-1 and len(min_diff_combination) > 1 and contig_lengths[contigs_map[contig]]>1000:
-                    # return True
-                    return contig, min_diff_combination
-
-        return None
-
-    # Threads and multi-processing
-    with Pool(nthreads) as p:
-        mapped = list(tqdm(p.imap(is_multi, list(range(node_count))), total=node_count))
+    executor.shutdown(wait=True)
 
     multi_bins = list(filter(lambda x: x is not None, mapped))
 
@@ -764,6 +728,100 @@ def main():
     #-----------------------------------
 
     logger.info("Thank you for using GraphBin2!")
+
+
+def is_multi(
+        contig, 
+        non_isolated,
+        binned_contigs,
+        n_bins,
+        bins,
+        bin_cov_sum,
+        bin_contig_len_total,
+        coverages,
+        contigs_map,
+        contig_lengths,
+        assembly_graph
+):
+    if contig in non_isolated and contig in binned_contigs:
+        
+        contig_bin = -1
+
+        # Get the bin of the current contig
+        for n in range(n_bins):
+            if contig in bins[n]:
+                contig_bin = n
+                break
+
+        # Get average coverage of each connected component representing a bin excluding the contig
+        bin_coverages = list(bin_cov_sum)
+        bin_contig_lengths = list(bin_contig_len_total)
+
+        bin_coverages[contig_bin] = bin_coverages[contig_bin] - (coverages[contigs_map[contig]]*contig_lengths[contigs_map[contig]])
+        bin_contig_lengths[contig_bin] = bin_contig_lengths[contig_bin] - contig_lengths[contigs_map[contig]]
+
+        for i in range(n_bins):
+            if bin_contig_lengths[i] != 0:
+                bin_coverages[i] = bin_coverages[i]/bin_contig_lengths[i]
+
+        # Get coverages of neighbours
+        neighbour_bins = [[] for x in range(n_bins)]
+
+        neighbour_bin_coverages = [[] for x in range(n_bins)]
+
+        neighbours = assembly_graph.neighbors(contig, mode=ALL)
+
+        for neighbour in neighbours:
+
+            for n in range(n_bins):
+                if neighbour in bins[n]:
+                    neighbour_bins[n].append(neighbour)
+                    neighbour_bin_coverages[n].append(coverages[contigs_map[neighbour]])
+                    break
+
+        zero_bin_count = 0
+
+        non_zero_bins = []
+
+        # Count the number of bins which have no labelled neighbouring contigs
+        for i in range(len(neighbour_bins)):
+            if len(neighbour_bins[i]) == 0:
+                zero_bin_count += 1
+            else:
+                non_zero_bins.append(i)
+
+        if zero_bin_count < n_bins-1:
+
+            bin_combinations = []
+
+            for i in range(len(non_zero_bins)):
+                bin_combinations += list(it.combinations(non_zero_bins, i+1))
+
+            min_diff = sys.maxsize
+            min_diff_combination = -1
+
+            for combination in bin_combinations:
+
+                comb_cov_total = 0
+
+                for i in range(len(combination)):
+                    comb_cov_total += bin_coverages[combination[i]]
+
+                cov_diff = abs(comb_cov_total-coverages[contigs_map[contig]])
+
+                if cov_diff < min_diff:
+                    min_diff = cov_diff
+                    min_diff_combination = combination
+
+            if min_diff_combination!=-1 and len(min_diff_combination) > 1 and contig_lengths[contigs_map[contig]]>1000:
+                # return True
+                return contig, min_diff_combination
+
+    return None
+
+
+def main(args):
+    run(args)
 
 
 if __name__ == "__main__":

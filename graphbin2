@@ -18,6 +18,36 @@ __email__ = "viji.mallawaarachchi@gmail.com"
 __status__ = "Stable Release"
 
 
+class ArgsObj:
+    def __init__(
+        self,
+        assembler,
+        graph,
+        contigs,
+        paths,
+        abundance,
+        binned,
+        output,
+        prefix,
+        depth,
+        threshold,
+        delimiter,
+        nthreads
+    ):
+        self.assembler = assembler
+        self.graph = graph
+        self.contigs = contigs
+        self.paths = paths
+        self.abundance = abundance
+        self.binned = binned
+        self.output = output
+        self.prefix = prefix
+        self.depth = depth
+        self.threshold = threshold
+        self.delimiter = delimiter
+        self.nthreads = nthreads
+
+
 @click.command()
 @click.option(
     "--assembler",
@@ -99,6 +129,7 @@ __status__ = "Stable Release"
     show_default=True,
     required=False,
 )
+@click.version_option(__version__, "-v", "--version", is_flag=True)
 def main(
     assembler,
     graph,
@@ -116,6 +147,9 @@ def main(
 
     """
     GraphBin2: Refined and Overlapped Binning of Metagenomic Contigs Using Assembly Graphs
+    GraphBin2 is a tool which refines the binning results obtained from existing tools and, is able to 
+    assign contigs to multiple bins. GraphBin2 uses the connectivity and coverage information from 
+    assembly graphs to adjust existing binning results on contigs and to infer contigs shared by multiple species.
     """
 
     assembly_graph_file = graph
@@ -215,54 +249,33 @@ def main(
 
     logger.info("GraphBin2 started")
 
+    # Make args object
+    args = ArgsObj(
+        assembler,
+        graph,
+        contigs,
+        paths,
+        abundance,
+        binned,
+        output,
+        prefix,
+        depth,
+        threshold,
+        delimiter,
+        nthreads
+    )
+
 
     # Run GraphBin2
     #---------------------------------------------------
     if assembler.lower() == "spades":
-        cmdGraphBin2 = """python "{0}/src/graphbin2_SPAdes.py" --graph "{1}" --contigs "{2}" --paths "{3}" --binned "{4}" --output "{5}" --prefix "{6}" --depth "{7}" --threshold "{8}" --delimiter "{9}" --nthreads "{10}" """.format(
-            os.path.dirname(__file__), 
-            assembly_graph_file,
-            contigs,
-            contig_paths, 
-            contig_bins_file, 
-            output_path,
-            prefix,
-            depth,
-            threshold,
-            delimiter,
-            nthreads)
+        graphbin2_SPAdes.main(args)
 
     elif assembler.lower() == "sga":
-        cmdGraphBin2 = """python "{0}/src/graphbin2_SGA.py" --graph "{1}" --contigs "{2}" --binned "{3}" --abundance "{4}" --output "{5}" --prefix "{6}" --depth "{7}" --threshold "{8}" --delimiter "{9}"  --nthreads "{10}" """.format(
-            os.path.dirname(__file__), 
-            assembly_graph_file,
-            contigs,
-            contig_bins_file, 
-            abundance,
-            output_path,
-            prefix,
-            depth,
-            threshold,
-            delimiter,
-            nthreads)
+        graphbin2_SGA.main(args)
 
     elif assembler.lower() == "flye":
-        cmdGraphBin2 = """python "{0}/src/graphbin2_Flye.py" --graph "{1}" --contigs "{2}" --paths "{3}" --binned "{4}" --abundance "{5}" --output "{6}" --prefix "{7}" --depth "{8}" --threshold "{9}" --delimiter "{10}"  --nthreads "{11}" """.format(
-            os.path.dirname(__file__), 
-            assembly_graph_file,
-            contigs,
-            contig_paths,
-            contig_bins_file, 
-            abundance,
-            output_path,
-            prefix,
-            depth,
-            threshold,
-            delimiter,
-            nthreads)
-
-
-    os.system(cmdGraphBin2)
+        graphbin2_Flye.main(args)
 
 
 if __name__ == "__main__":
