@@ -1,9 +1,7 @@
 import subprocess
-
 from pathlib import Path
 
 import pytest
-
 
 __author__ = "Vijini Mallawaarachchi"
 __copyright__ = "Copyright 2020, GraphBin2 Project"

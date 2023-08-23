@@ -2,7 +2,6 @@
 
 import setuptools
 
-
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
@@ -30,7 +29,7 @@ setuptools.setup(
     entry_points={
         "console_scripts": [
             "gfa2fasta=src.support.gfa2fasta:main",
-            "prep_result=src.support.prepResult:main"
+            "prep_result=src.support.prepResult:main",
         ],
     },
     classifiers=[

@@ -2,12 +2,12 @@
 
 """graphbin2: Refined and overlapped binning of metagenomic contigs using assembly graphs."""
 
-import click
-import os
-import sys
 import logging
+import sys
 
-from src import (graphbin2_SPAdes, graphbin2_SGA, graphbin2_Flye)
+import click
+
+from src import graphbin2_Flye, graphbin2_SGA, graphbin2_SPAdes
 
 __author__ = "Vijini Mallawaarachchi, Anuradha Wickramarachchi, and Yu Lin"
 __copyright__ = "Copyright 2020, GraphBin2 Project"
