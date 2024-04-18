@@ -3,9 +3,9 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - python=3.7.4
-  - biopython=1.74
-  - python-igraph=0.7.1
-  - tqdm=4.36.1
+  - python>=3.9
+  - biopython>=1.74
+  - python-igraph>=0.7.1
+  - tqdm>=4.36.1
   - scipy
   - click
