@@ -21,10 +21,12 @@ GraphBin2 is an extension of [GraphBin](https://github.com/Vini2/GraphBin) which
 ## Getting Started
 
 ### Dependencies
-GraphBin2 requires Python 3.7 (tested on Python 3.7.4). You will need the following python packages installed. Versions tested on are listed as well.
+GraphBin2 requires Python 3.7 or higher (tested on Python 3.7.4). You will need the following python packages installed. Versions tested on are listed as well.
 * [Biopython](https://biopython.org/) - version 1.74
 * [python-igraph](https://igraph.org/python/) - version 0.7.1
 * [tqdm](https://github.com/tqdm/tqdm) - version 4.36.1
+* [scipy](https://scipy.org/)
+* [click](https://click.palletsprojects.com/)
 
 ### Downloading GraphBin2
 You can download the latest release of GraphBin2 from [Releases](https://github.com/Vini2/GraphBin2/releases) or clone the GraphBin2 repository to your machine.
