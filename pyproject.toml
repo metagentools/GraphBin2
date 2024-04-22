@@ -1,0 +1,54 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "graphbin2"
+authors = [{name = "Vijini Mallawaarachchi", email = "viji.mallawaarachchi@gmail.com"}]
+keywords = ["metagenomics", "binning", "contigs", "bioinformatics"]
+readme = "README.md"
+license = {file = "LICENSE"}
+requires-python = ">=3.9,<3.13"
+classifiers=[
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: BSD License",
+    "Natural Language :: English",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
+dependencies=[
+    "biopython",
+    "python-igraph",
+    "scipy",
+    "tqdm",
+    "click",
+]
+# the following are inferred from the source code
+dynamic = ["version", "description"]
+
+[project.sdist]
+include = ["doc/", "requirements.txt", "src/*", "pyproject.toml"]
+exclude = ["doc/*.html"]
+
+[project.urls]
+Home = "https://github.com/metagentools/GraphBin2"
+
+[project.scripts]
+graphbin2 = "graphbin2.cli:main"
+
+[project.optional-dependencies]
+test = [
+    "pytest",
+    "pytest-cov",
+    "pytest-xdist",
+]
+dev = [
+    "black",
+    "click",
+    "flit",
+    "isort",
+    "pytest",
+    "pytest-cov",
+    "pytest-xdist",
+]
