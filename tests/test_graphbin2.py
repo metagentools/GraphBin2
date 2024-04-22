@@ -44,9 +44,15 @@ def exec_command(cmnd, stdout=subprocess.PIPE, stderr=subprocess.PIPE):
     return out.decode("utf8") if out is not None else None
 
 
-def test_graphbin_version():
+def test_graphbin_help():
     """test graphbin2 help message"""
     cmd = "graphbin2 --help"
+    exec_command(cmd)
+
+
+def test_graphbin_version():
+    """test graphbin2 version"""
+    cmd = "graphbin2 --version"
     exec_command(cmd)
 
 
