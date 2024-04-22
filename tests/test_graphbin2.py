@@ -4,13 +4,7 @@ from pathlib import Path
 import pytest
 
 __author__ = "Vijini Mallawaarachchi"
-__copyright__ = "Copyright 2020, GraphBin2 Project"
-__credits__ = ["Vijini Mallawaarachchi", "Anuradha Wickramarachchi", "Yu Lin"]
-__license__ = "BSD"
-__version__ = "1.2.0"
-__maintainer__ = "Vijini Mallawaarachchi"
-__email__ = "viji.mallawaarachchi@gmail.com"
-__status__ = "Development"
+__credits__ = ["Vijini Mallawaarachchi"]
 
 
 TEST_ROOTDIR = Path(__file__).parent
