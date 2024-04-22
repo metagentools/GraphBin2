@@ -1,4 +1,4 @@
-"""my doctsring
+"""GraphBin2: Refined and Overlapped Binning of Metagenomic Contigs Using Assembly Graphs
 """
 
 __author__ = "Vijini Mallawaarachchi, Anuradha Wickramarachchi, and Yu Lin"
