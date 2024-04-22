@@ -34,10 +34,18 @@ jobs:
 
       - name: "Install dependencies on ${{ matrix.os }} for Python ${{ matrix.python-version }}"
         run: |
+          python --version
           python -m pip install --upgrade pip
-          pip install .
+          pip install --upgrade pip wheel setuptools flit
+          flit install
       
       - name: "Generate coverage report on ${{ matrix.os }} for Python ${{ matrix.python-version }}"
         run: |
           pip install pytest pytest-cov
-          pytest --cov=./ --cov-report=xml --cov-append
+          pytest --cov=graphbin2 --cov-report=xml --cov-append
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4.0.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: metagentools/GraphBin2
