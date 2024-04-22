@@ -532,9 +532,7 @@ def run(args):
 
                 for i in range(len(BFS_labelled_nodes)):
                     path_length = BFS_labelled_nodes[i][3]
-                    weighted_bin_count[BFS_labelled_nodes[i][2]] += 1 / (
-                        2**path_length
-                    )
+                    weighted_bin_count[BFS_labelled_nodes[i][2]] += 1 / (2**path_length)
 
                 should_move = False
 

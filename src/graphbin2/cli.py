@@ -7,7 +7,7 @@ import sys
 
 import click
 
-from src import graphbin2_Flye, graphbin2_SGA, graphbin2_SPAdes
+from graphbin2 import graphbin2_Flye, graphbin2_SGA, graphbin2_SPAdes
 
 __author__ = "Vijini Mallawaarachchi, Anuradha Wickramarachchi, and Yu Lin"
 __copyright__ = "Copyright 2020, GraphBin2 Project"
@@ -32,7 +32,7 @@ class ArgsObj:
         depth,
         threshold,
         delimiter,
-        nthreads
+        nthreads,
     ):
         self.assembler = assembler
         self.graph = graph
@@ -116,7 +116,7 @@ class ArgsObj:
 @click.option(
     "--delimiter",
     help="delimiter for output results. Supports a comma (,), a semicolon (;), a tab ($'\\t'), a space (\" \") and a pipe (|) .",
-    type=click.Choice([",", ";", "$'\\t'", "\" \""], case_sensitive=False),
+    type=click.Choice([",", ";", "$'\\t'", '" "'], case_sensitive=False),
     default=",",
     show_default=True,
     required=False,
@@ -142,13 +142,12 @@ def main(
     depth,
     threshold,
     delimiter,
-    nthreads
+    nthreads,
 ):
-
     """
     GraphBin2: Refined and Overlapped Binning of Metagenomic Contigs Using Assembly Graphs
-    GraphBin2 is a tool which refines the binning results obtained from existing tools and, is able to 
-    assign contigs to multiple bins. GraphBin2 uses the connectivity and coverage information from 
+    GraphBin2 is a tool which refines the binning results obtained from existing tools and, is able to
+    assign contigs to multiple bins. GraphBin2 uses the connectivity and coverage information from
     assembly graphs to adjust existing binning results on contigs and to infer contigs shared by multiple species.
     """
 
@@ -159,36 +158,33 @@ def main(
     contig_bins_file = binned
     output_path = output
 
-
     # Validate prefix
     if prefix != None:
         if not prefix.endswith("_"):
             prefix = prefix + "_"
     else:
-        prefix = ''
-
+        prefix = ""
 
     # Setup logger
-    #-----------------------
-    logger = logging.getLogger('GraphBin2 1.2.0')
+    # -----------------------
+    logger = logging.getLogger("GraphBin2 1.2.0")
     logger.setLevel(logging.DEBUG)
-    formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+    formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
     consoleHeader = logging.StreamHandler()
     consoleHeader.setFormatter(formatter)
     consoleHeader.setLevel(logging.INFO)
     logger.addHandler(consoleHeader)
 
     # Setup output path for log file
-    #---------------------------------------------------
+    # ---------------------------------------------------
 
     fileHandler = logging.FileHandler(f"{output_path}/{prefix}graphbin2.log")
     fileHandler.setLevel(logging.DEBUG)
     fileHandler.setFormatter(formatter)
     logger.addHandler(fileHandler)
 
-
     # Validation of inputs
-    #---------------------------------------------------
+    # ---------------------------------------------------
 
     # Check if paths file is provided when the assembler type is SPAdes
     if assembler.lower() == "spades" and contig_paths is None:
@@ -198,7 +194,9 @@ def main(
 
     # Check if paths file is provided when the assembler type is SPAdes
     if assembler.lower() == "flye" and contig_paths is None:
-        logger.error("Please make sure to provide the path to the assembly_info.txt file.")
+        logger.error(
+            "Please make sure to provide the path to the assembly_info.txt file."
+        )
         logger.info("Exiting GraphBin2...\nBye...!\n")
         sys.exit(1)
 
@@ -224,18 +222,25 @@ def main(
         logger.info("Exiting GraphBin2...\nBye...!\n")
         sys.exit(1)
 
-
     # Start GraphBin2
-    #---------------------------------------------------
+    # ---------------------------------------------------
 
-    logger.info("Welcome to GraphBin2: Refined and Overlapped Binning of Metagenomic Contigs using Assembly Graphs.")
+    logger.info(
+        "Welcome to GraphBin2: Refined and Overlapped Binning of Metagenomic Contigs using Assembly Graphs."
+    )
 
     if assembler.lower() == "spades":
-        logger.info("This version of GraphBin2 makes use of the assembly graph produced by SPAdes which is based on the de Bruijn graph approach.")
+        logger.info(
+            "This version of GraphBin2 makes use of the assembly graph produced by SPAdes which is based on the de Bruijn graph approach."
+        )
     elif assembler.lower() == "sga":
-        logger.info("This version of GraphBin2 makes use of the assembly graph produced by SGA which is based on the string graph approach.")
+        logger.info(
+            "This version of GraphBin2 makes use of the assembly graph produced by SGA which is based on the string graph approach."
+        )
     elif assembler.lower() == "flye":
-        logger.info("This version of GraphBin2 makes use of the assembly graph produced by metaFlye which is a long reads assembler based on the de Bruijn graph approach.")
+        logger.info(
+            "This version of GraphBin2 makes use of the assembly graph produced by metaFlye which is a long reads assembler based on the de Bruijn graph approach."
+        )
 
     logger.info("Input arguments:")
     logger.info(f"Contigs file: {contigs_file}")
@@ -262,12 +267,11 @@ def main(
         depth,
         threshold,
         delimiter,
-        nthreads
+        nthreads,
     )
 
-
     # Run GraphBin2
-    #---------------------------------------------------
+    # ---------------------------------------------------
     if assembler.lower() == "spades":
         graphbin2_SPAdes.main(args)
 
