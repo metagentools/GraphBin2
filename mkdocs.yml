@@ -1,0 +1,16 @@
+site_name: GraphBin2
+site_url: "https://github.com/metagentools/GraphBin2"
+site_author: "Vijini Mallawaarachchi"
+repo_url: "https://github.com/metagentools/GraphBin2"
+repo_name: 'GitHub'
+theme:
+    name: readthedocs
+    highlightjs: true
+    hljs_languages:
+        - yaml
+        - bash
+        - shell
+        - text
+nav:
+    - HOME:
+        - Introduction: index.md
