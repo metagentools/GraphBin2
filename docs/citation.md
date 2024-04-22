@@ -2,7 +2,7 @@
 
 GraphBin2 was accepted for publication at the 20th International Workshop on Algorithms in Bioinformatics ([WABI 2020](http://algo2020.di.unipi.it/WABI2020/)) and is published in [Leibniz International Proceedings in Informatics (LIPIcs)](https://www.dagstuhl.de/dagpub/978-3-95977-161-0) DOI: [10.4230/LIPIcs.WABI.2020.8](https://doi.org/10.4230/LIPIcs.WABI.2020.8). 
 
-An extended journal article of GraphBin has been published in BMC Algorithms for Molecular Biology at DOI: [10.1186/s13015-021-00185-6](https://doi.org/10.1186/s13015-021-00185-6).
+An extended journal article of GraphBin2 has been published in BMC Algorithms for Molecular Biology at DOI: [10.1186/s13015-021-00185-6](https://doi.org/10.1186/s13015-021-00185-6).
 
 If you use GraphBin2 in your work, please cite the following publications.
 
