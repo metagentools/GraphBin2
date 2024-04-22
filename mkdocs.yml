@@ -14,3 +14,11 @@ theme:
 nav:
     - HOME:
         - Introduction: index.md
+        - Workflow: workflow.md
+        - Citation: citation.md
+    - RUNNING:
+        - Install: install.md
+        - Preprocess: preprocess.md
+        - Support: support.md
+        - Usage: usage.md
+        - Results: results.md

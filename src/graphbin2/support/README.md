@@ -1,16 +1,16 @@
 # Support scripts for GraphBin2
 
-## prepResult.py
+## prepResult
 
-`prepResult.py` is a support script that allows you to format an initial binning result in to the .csv format with contig identifiers and bin ID. Contigs are named according to their original identifier and bins are numbered starting from 1. You can run [`prepResult.py`](https://github.com/Vini2/GraphBin2/blob/master/support/prepResult.py) as follows.
-
-```
-python prepResult.py --binned /path/to/folder_with_binning_result --output /path/to/output_folder
-```
-You can see the usage options of `prepResult.py` by typing `python prepResult.py -h` on the command line.
+`prepResult` is a support comamnd that allows you to format an initial binning result in to the .csv format with contig identifiers and bin ID. Contigs are named according to their original identifier and bins are numbered starting from 1. You can run [`prepResult`](https://github.com/Vini2/GraphBin2/blob/master/src/graphbin2/support/prepResult.py) as follows.
 
 ```
-usage: prepResult.py [-h] --binned BINNED --output OUTPUT
+prepResult --binned /path/to/folder_with_binning_result --output /path/to/output_folder
+```
+You can see the usage options of `prepResult` by typing `prepResult -h` on the command line.
+
+```
+usage: prepResult    [-h] --binned BINNED --output OUTPUT
                      [--delimiter DELIMITER] [--prefix PREFIX]
 
 optional arguments:
@@ -34,14 +34,14 @@ You can also specify the delimiter for the initial binning result file using the
 * `" "` for a space 
 * `|` for a pipe.
 
-## gfa2fasta.py
+## gfa2fasta
 
-Please note that, if you are using Flye/Miniasm assemblies, you should provide the edge sequences for the initial binning tool (not the contigs output from Flye/Miniasm). To get the edge sequences from the GFA file, you can use the script [`gfa2fasta.py`](https://github.com/Vini2/GraphBin2/blob/master/support/gfa2fasta.py) as the assembly graph consists of these edge sequences and not contigs.
+Please note that, if you are using Flye/Miniasm assemblies, you should provide the edge sequences for the initial binning tool (not the contigs output from Flye/Miniasm). To get the edge sequences from the GFA file, you can use the command [`gfa2fasta`](https://github.com/Vini2/GraphBin2/blob/master/src/graphbin2/support/gfa2fasta.py) as the assembly graph consists of these edge sequences and not contigs.
 
-You can see the usage options of `gfa2fasta.py` by typing `python gfa2fasta.py -h` on the command line.
+You can see the usage options of `gfa2fasta` by typing `gfa2fasta -h` on the command line.
 
 ```
-usage: gfa2fasta.py [-h] --graph GRAPH --assembler ASSEMBLER --output OUTPUT
+usage: gfa2fasta    [-h] --graph GRAPH --assembler ASSEMBLER --output OUTPUT
                     [--prefix PREFIX]
 
 optional arguments:
