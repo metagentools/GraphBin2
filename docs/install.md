@@ -8,7 +8,7 @@ You can download the latest release of GraphBin2 from [Releases](https://github.
 git clone https://github.com/Vini2/GraphBin2.git
 ```
 
-If you have downloaded the latest release, you will have to extract the files using the following command.
+If you have downloaded a release, you will have to extract the files using the following command.
 
 ```bash
 unzip [file_name].zip
@@ -37,10 +37,12 @@ Now install GraphBin2 using the following command.
 flit install
 ```
 
-Now you are ready to run GraphBin2.
+## Test the setup
 
-If you want to switch back to your normal environment, run the following command.
+After installing, run the following command to ensure that GraphBin2 is working.
 
 ```bash
-conda deactivate
+graphbin2 -h
 ```
+
+Now you are ready to run GraphBin2.
