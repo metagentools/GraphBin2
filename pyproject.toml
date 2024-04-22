@@ -41,6 +41,7 @@ prepResult = "graphbin2.support.prepResult:main"
 
 [project.optional-dependencies]
 test = [
+    "nox",
     "pytest",
     "pytest-cov",
     "pytest-xdist",
@@ -48,9 +49,47 @@ test = [
 dev = [
     "black",
     "click",
+    "docformatter",
     "flit",
+    "nox",
     "isort",
     "pytest",
     "pytest-cov",
     "pytest-xdist",
 ]
+
+[tool.flit.sdist]
+include = ["docs/", "requirements.txt", "src/*", "pyproject.toml"]
+exclude = ["docs/*.html"]
+
+[tool.pytest.ini_options]
+addopts = ["--strict-config", "-ra"]
+testpaths = "tests"
+
+[tool.black]
+line-length = 88
+target-version = ['py39', 'py310', 'py311', 'py312']
+exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | build
+  | doc
+  | dist
+  | tests/data
+)/
+'''
+
+[tool.isort]
+atomic=true
+force_grid_wrap=0
+include_trailing_comma=true
+lines_after_imports=2
+lines_between_types=1
+multi_line_output=3
+use_parentheses=true
