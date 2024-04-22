@@ -36,6 +36,8 @@ Home = "https://github.com/metagentools/GraphBin2"
 
 [project.scripts]
 graphbin2 = "graphbin2.cli:main"
+gfa2fasta = "graphbin2.support.gfa2fasta:main"
+prepResult = "graphbin2.support.prepResult:main"
 
 [project.optional-dependencies]
 test = [
