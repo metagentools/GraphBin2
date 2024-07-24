@@ -77,17 +77,13 @@ contig-4,2
 ```
 Example Flye binned input
 ```
-edge_1,1
-edge_2,2
-edge_3,1
-edge_4,1
-edge_5,2
+contig_1,1
+contig_2,2
+contig_3,1
+contig_4,1
+contig_5,2
 ...
 ```
-
-### Before using Flye assemblies for binning
-
-Before using Flye assemblies for binning, please use [`gfa2fasta`](https://github.com/Vini2/GraphBin2/blob/master/src/graphbin2/support/gfa2fasta.py) command to get the edge sequences. Further details can be found [here](https://github.com/Vini2/GraphBin2/blob/master/src/graphbin2/support/README.md#gfa2fastapy). More details can be found in the next page.
 
 ## Obtain the coverage of contigs (`abundance.tsv`)
 
