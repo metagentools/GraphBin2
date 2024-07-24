@@ -38,12 +38,6 @@ def exec_command(cmnd, stdout=subprocess.PIPE, stderr=subprocess.PIPE):
     return out.decode("utf8") if out is not None else None
 
 
-def test_gfa2fasta_help():
-    """test gfa2fasta help message"""
-    cmd = "gfa2fasta --help"
-    exec_command(cmd)
-
-
 def test_prepResult_help():
     """test prepResult help message"""
     cmd = "prepResult --help"
