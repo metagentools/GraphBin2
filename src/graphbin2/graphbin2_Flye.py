@@ -8,6 +8,7 @@ import logging
 import re
 import sys
 import time
+
 from collections import defaultdict
 
 from Bio import SeqIO
@@ -261,7 +262,9 @@ def run(args):
 
     except BaseException as err:
         logger.error(f"Unexpected {err}")
-        logger.error("Please make sure that the correct path to the assembly graph file is provided.")
+        logger.error(
+            "Please make sure that the correct path to the assembly graph file is provided."
+        )
         logger.info("Exiting GraphBin2... Bye...!")
         sys.exit(1)
 
@@ -283,7 +286,7 @@ def run(args):
 
         n_bins = len(bins_list)
         logger.info("Number of bins available in binning result: " + str(n_bins))
-    
+
     except BaseException as err:
         logger.error(f"Unexpected {err}")
         logger.error(
@@ -380,10 +383,7 @@ def run(args):
                         active_node,
                         contig_bin,
                         depth[active_node],
-                        abs(
-                            coverages[node]
-                            - coverages[active_node]
-                        ),
+                        abs(coverages[node] - coverages[active_node]),
                     )
                 )
 

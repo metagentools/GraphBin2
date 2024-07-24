@@ -9,6 +9,7 @@ import click
 
 from graphbin2 import graphbin2_Flye, graphbin2_SGA, graphbin2_SPAdes
 
+
 __author__ = "Vijini Mallawaarachchi, Anuradha Wickramarachchi, and Yu Lin"
 __copyright__ = "Copyright 2020, GraphBin2 Project"
 __license__ = "BSD"
