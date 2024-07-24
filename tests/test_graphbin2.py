@@ -74,12 +74,13 @@ def test_graphbin_on_spades_10g_dataset(tmp_dir):
     exec_command(cmd)
 
 
-# def test_graphbin_on_sga_5g_dataset(tmp_dir):
-#     """test graphbin on spades assembly"""
-#     dir_name = TEST_ROOTDIR / "data" / "Sim-5G+SGA"
-#     graph = dir_name / "default-graph.asqg"
-#     contigs = dir_name / "default-contigs.fa"
-#     abundance = dir_name / "abundance.abund"
-#     binned = dir_name / "initial_contig_bins.csv"
-#     cmd = f"graphbin2 --assembler sga --graph {graph} --contigs {contigs} --abundance {abundance} --binned {binned} --output {tmp_dir}"
-#     exec_command(cmd)
+def test_graphbin_on_flye_1y3b_dataset(tmp_dir):
+    """test graphbin on spades assembly"""
+    dir_name = TEST_ROOTDIR / "data" / "1Y3B_Flye"
+    graph = dir_name / "assembly_graph.gfa"
+    contigs = dir_name / "assembly.fasta"
+    paths = dir_name / "assembly_info.txt"
+    abundance = dir_name / "abundance.tsv"
+    binned = dir_name / "initial_binning_res.csv"
+    cmd = f"graphbin2 --assembler flye --graph {graph} --contigs {contigs} --paths {paths} --abundance {abundance} --binned {binned} --output {tmp_dir}"
+    exec_command(cmd)

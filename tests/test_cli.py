@@ -29,7 +29,7 @@ def runner():
     return CliRunner()
 
 
-def test_graphbin2_run(runner, tmp_dir):
+def test_graphbin2_spades_run(runner, tmp_dir):
     outpath = tmp_dir
     graph = DATADIR / "Sim-5G+metaSPAdes" / "assembly_graph_with_scaffolds.gfa"
     contigs = DATADIR / "Sim-5G+metaSPAdes" / "contigs.fasta"
@@ -37,5 +37,16 @@ def test_graphbin2_run(runner, tmp_dir):
     binned = DATADIR / "Sim-5G+metaSPAdes" / "initial_contig_bins.csv"
     abundance = DATADIR / "Sim-5G+metaSPAdes" / "abundance.abund"
     args = f"--assembler spades --graph {graph} --contigs {contigs} --paths {paths} --binned {binned} --abundance {abundance} --output {outpath}".split()
+    r = runner.invoke(main, args, catch_exceptions=False)
+    assert r.exit_code == 0, r.output
+
+def test_graphbin2_flye_run(runner, tmp_dir):
+    outpath = tmp_dir
+    graph = DATADIR / "1Y3B_Flye" / "assembly_graph.gfa"
+    contigs = DATADIR / "1Y3B_Flye" / "assembly.fasta"
+    paths = DATADIR / "1Y3B_Flye" / "assembly_info.txt"
+    binned = DATADIR / "1Y3B_Flye" / "initial_binning_res.csv"
+    abundance = DATADIR / "1Y3B_Flye" / "abundance.tsv"
+    args = f"--assembler flye --graph {graph} --contigs {contigs} --paths {paths} --binned {binned} --abundance {abundance} --output {outpath}".split()
     r = runner.invoke(main, args, catch_exceptions=False)
     assert r.exit_code == 0, r.output
