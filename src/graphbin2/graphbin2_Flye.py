@@ -17,8 +17,6 @@ from tqdm import tqdm
 
 from .bidirectionalmap.bidirectionalmap import BidirectionalMap
 
-VERY_SMALL_VAL = 0.0001
-
 
 def run(args):
     # Get arguments
@@ -89,7 +87,7 @@ def run(args):
 
     with open(contig_paths, "r") as file:
         for line in file.readlines():
-            if not line.startswith("#"):
+            if not line.startswith("seq_name"):
                 strings = line.strip().split()
                 contig_names[contig_num] = strings[0]
                 contig_lengths[contig_num] = int(strings[1])
@@ -107,14 +105,7 @@ def run(args):
 
             for i in range(1, len(strings)):
                 contig_coverage = float(strings[i])
-
-                if contig_coverage < VERY_SMALL_VAL:
-                    contig_coverage = VERY_SMALL_VAL
-
-                if contig_num not in coverages:
-                    coverages[contig_num] = [contig_coverage]
-                else:
-                    coverages[contig_num].append(contig_coverage)
+                coverages[contig_num] = contig_coverage
 
     # Get the paths and edges
     # -----------------------------------
@@ -122,12 +113,10 @@ def run(args):
     paths = {}
     segment_contigs = {}
 
-    contig_segments = {}
-
     try:
         with open(contig_paths) as file:
             for line in file.readlines():
-                if not line.startswith("#"):
+                if not line.startswith("seq_name"):
                     strings = line.strip().split()
 
                     contig_name = strings[0]
@@ -155,16 +144,15 @@ def run(args):
                             else:
                                 segment_contigs[segment].add(contig_num)
 
-        links = []
         links_map = defaultdict(set)
 
         # Get links from assembly_graph.gfa
         with open(assembly_graph_file) as file:
-            line = file.readline()
+            for line in file.readlines():
+                line = line.strip()
 
-            while line != "":
                 # Identify lines with link information
-                if "L" in line:
+                if line.startswith("L"):
                     strings = line.split("\t")
 
                     f1, f2 = "", ""
@@ -180,8 +168,6 @@ def run(args):
 
                     links_map[f1].add(f2)
                     links_map[f2].add(f1)
-
-                line = file.readline()
 
         # Create list of edges
         edge_list = []
@@ -242,41 +228,42 @@ def run(args):
                                 # Add edge to list of edges
                                 edge_list.append((i, contig))
 
-    except:
+        node_count = len(contig_names_rev)
+
+    except BaseException as err:
+        logger.error(f"Unexpected {err}")
         logger.error(
             "Please make sure that the correct path to the assembly graph file is provided."
         )
         logger.info("Exiting GraphBin2... Bye...!")
         sys.exit(1)
 
-    node_count = len(contig_names_rev)
-
-    logger.info("Total number of contigs available: " + str(node_count))
+    logger.info(f"Total number of contigs available: {node_count}")
 
     ## Construct the assembly graph
     # -------------------------------
 
-    # try:
+    try:
+        # Create the graph
+        assembly_graph = Graph()
 
-    # Create the graph
-    assembly_graph = Graph()
+        # Add vertices
+        assembly_graph.add_vertices(node_count)
 
-    # Add vertices
-    assembly_graph.add_vertices(node_count)
+        # Name vertices
+        for i in range(len(assembly_graph.vs)):
+            assembly_graph.vs[i]["id"] = i
+            assembly_graph.vs[i]["label"] = str(contig_names[i])
 
-    # Name vertices
-    for i in range(len(assembly_graph.vs)):
-        assembly_graph.vs[i]["id"] = i
-        assembly_graph.vs[i]["label"] = str(contig_names[i])
+        # Add edges to the graph
+        assembly_graph.add_edges(edge_list)
+        assembly_graph.simplify(multiple=True, loops=False, combine_edges=None)
 
-    # Add edges to the graph
-    assembly_graph.add_edges(edge_list)
-    assembly_graph.simplify(multiple=True, loops=False, combine_edges=None)
-
-    # except:
-    #     logger.error("Please make sure that the correct path to the assembly graph file is provided.")
-    #     logger.info("Exiting GraphBin2... Bye...!")
-    #     sys.exit(1)
+    except BaseException as err:
+        logger.error(f"Unexpected {err}")
+        logger.error("Please make sure that the correct path to the assembly graph file is provided.")
+        logger.info("Exiting GraphBin2... Bye...!")
+        sys.exit(1)
 
     logger.info("Total number of edges in the assembly graph: " + str(len(edge_list)))
 
@@ -296,7 +283,9 @@ def run(args):
 
         n_bins = len(bins_list)
         logger.info("Number of bins available in binning result: " + str(n_bins))
-    except:
+    
+    except BaseException as err:
+        logger.error(f"Unexpected {err}")
         logger.error(
             "Please make sure that the correct path to the binning result file is provided and it is having the correct format"
         )
@@ -320,7 +309,8 @@ def run(args):
         for i in range(n_bins):
             bins[i].sort()
 
-    except:
+    except BaseException as err:
+        logger.error(f"Unexpected {err}")
         logger.error(
             "Please make sure that you have provided the correct assembler type and the correct path to the binning result file in the correct format."
         )
@@ -390,7 +380,10 @@ def run(args):
                         active_node,
                         contig_bin,
                         depth[active_node],
-                        distance.euclidean(coverages[node], coverages[active_node]),
+                        abs(
+                            coverages[node]
+                            - coverages[active_node]
+                        ),
                     )
                 )
 
