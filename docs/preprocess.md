@@ -88,3 +88,16 @@ edge_5,2
 ### Before using Flye assemblies for binning
 
 Before using Flye assemblies for binning, please use [`gfa2fasta`](https://github.com/Vini2/GraphBin2/blob/master/src/graphbin2/support/gfa2fasta.py) command to get the edge sequences. Further details can be found [here](https://github.com/Vini2/GraphBin2/blob/master/src/graphbin2/support/README.md#gfa2fastapy). More details can be found in the next page.
+
+## Obtain the coverage of contigs (`abundance.tsv`)
+
+You can use [CoverM](https://github.com/wwood/CoverM) to get the coverage of contigs. You can run the following commands to get the `abundance.tsv` file. Please make sure that there are **no headers** in the `abundance.tsv` file.
+
+```
+coverm contig -1 reads_1.fastq -2 reads_2.fastq -r contigs.fasta -o abundance.tsv -t 8
+sed -i '1d' abundance.tsv   # remove the header of the file
+```
+
+The resulting `abundance.tsv` file can be directly used in GraphBin2.
+
+Once you have obtained the assembly output, binning results and the coverage information file, you can run GraphBin2.
