@@ -33,22 +33,3 @@ You can also specify the delimiter for the initial binning result file using the
 * `$'\t'` for a tab
 * `" "` for a space 
 * `|` for a pipe.
-
-## gfa2fasta
-
-Please note that, if you are using Flye/Miniasm assemblies, you should provide the edge sequences for the initial binning tool (not the contigs output from Flye/Miniasm). To get the edge sequences from the GFA file, you can use the command [`gfa2fasta`](https://github.com/Vini2/GraphBin2/blob/master/src/graphbin2/support/gfa2fasta.py) as the assembly graph consists of these edge sequences and not contigs.
-
-You can see the usage options of `gfa2fasta` by typing `gfa2fasta -h` on the command line.
-
-```
-usage: gfa2fasta    [-h] --graph GRAPH --assembler ASSEMBLER --output OUTPUT
-                    [--prefix PREFIX]
-
-optional arguments:
-  -h, --help            show this help message and exit
-  --graph GRAPH         path to the assembly graph file
-  --assembler ASSEMBLER
-                        type of the assembler (Flye or Miniasm)
-  --output OUTPUT       path to the output folder
-  --prefix PREFIX       prefix for the output file
-```

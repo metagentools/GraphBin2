@@ -67,11 +67,14 @@ The Flye version of `graphbin2` takes in 4 files as inputs (required).
 ## Example Usage
 
 ```
+# metaSPAdes assembly
 graphbin2 --assembler spades --contigs /path/to/contigs.fasta --graph /path/to/graph_file.gfa --paths /path/to/paths_file.paths --binned /path/to/binning_result.csv --output /path/to/output_folder
 ```
 ```
+# SGA assembly
 graphbin2 --assembler sga --contigs /path/to/contigs.fa --abundance /path/to/abundance.tsv --graph /path/to/graph_file.asqg --binned /path/to/binning_result.csv --output /path/to/output_folder
 ```
 ```
-graphbin2 --assembler flye --contigs /path/to/edges.fasta --abundance /path/to/abundance.tsv --graph /path/to/graph_file.gfa --binned /path/to/binning_result.csv --output /path/to/output_folder
+# metaFlye assembly
+graphbin2 --assembler flye --contigs /path/to/assembly.fasta --paths /path/to/assembly_info.txt --abundance /path/to/abundance.tsv --graph /path/to/graph_file.gfa --binned /path/to/binning_result.csv --output /path/to/output_folder
 ```
