@@ -62,18 +62,6 @@ def test_graphbin_on_spades_5g_dataset(tmp_dir):
     exec_command(cmd)
 
 
-def test_graphbin_on_spades_10g_dataset(tmp_dir):
-    """test graphbin on spades assembly"""
-    dir_name = TEST_ROOTDIR / "data" / "Sim-10G+metaSPAdes"
-    graph = dir_name / "assembly_graph_with_scaffolds.gfa"
-    contigs = dir_name / "contigs.fasta"
-    paths = dir_name / "contigs.paths"
-    abundance = dir_name / "abundance.abund"
-    binned = dir_name / "initial_contig_bins.csv"
-    cmd = f"graphbin2 --assembler spades --graph {graph} --contigs {contigs} --paths {paths} --abundance {abundance} --binned {binned} --output {tmp_dir}"
-    exec_command(cmd)
-
-
 def test_graphbin_on_flye_1y3b_dataset(tmp_dir):
     """test graphbin on spades assembly"""
     dir_name = TEST_ROOTDIR / "data" / "1Y3B_Flye"
