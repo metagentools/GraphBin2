@@ -13,7 +13,6 @@ from collections import defaultdict
 
 from Bio import SeqIO
 from igraph import *
-from scipy.spatial import distance
 from tqdm import tqdm
 
 from .bidirectionalmap.bidirectionalmap import BidirectionalMap
@@ -103,10 +102,7 @@ def run(args):
             strings = line.strip().split("\t")
 
             contig_num = contig_names_rev[strings[0]]
-
-            for i in range(1, len(strings)):
-                contig_coverage = float(strings[i])
-                coverages[contig_num] = contig_coverage
+            coverages[contig_num] = int(float(strings[1]))
 
     # Get the paths and edges
     # -----------------------------------
