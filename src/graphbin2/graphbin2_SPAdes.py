@@ -146,7 +146,8 @@ def run(args):
                 name = file.readline()
                 path = file.readline()
 
-    except:
+    except BaseException as err:
+        logger.error(f"Unexpected {err}")
         logger.error(
             "Please make sure that the correct path to the contig paths file is provided."
         )
@@ -236,7 +237,8 @@ def run(args):
         assembly_graph.add_edges(edge_list)
         assembly_graph.simplify(multiple=True, loops=False, combine_edges=None)
 
-    except:
+    except BaseException as err:
+        logger.error(f"Unexpected {err}")
         logger.error(
             "Please make sure that the correct path to the assembly graph file is provided."
         )
@@ -261,7 +263,9 @@ def run(args):
 
         n_bins = len(bins_list)
         logger.info("Number of bins available in binning result: " + str(n_bins))
-    except:
+    
+    except BaseException as err:
+        logger.error(f"Unexpected {err}")
         logger.error(
             "Please make sure that the correct path to the binning result file is provided and it is having the correct format"
         )
@@ -286,7 +290,8 @@ def run(args):
                 bin_num = int(row[1]) - 1
                 bins[bin_num].append(contig_num)
 
-    except:
+    except BaseException as err:
+        logger.error(f"Unexpected {err}")
         logger.error(
             "Please make sure that you have provided the correct assembler type and the correct path to the binning result file in the correct format."
         )
