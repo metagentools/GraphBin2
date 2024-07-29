@@ -87,7 +87,7 @@ def run(args):
 
     with open(contig_paths, "r") as file:
         for line in file.readlines():
-            if not line.startswith("seq_name"):
+            if not (line.startswith("seq_name") or line.startswith("#")):
                 strings = line.strip().split()
                 contig_names[contig_num] = strings[0]
                 contig_lengths[contig_num] = int(strings[1])
@@ -113,7 +113,7 @@ def run(args):
     try:
         with open(contig_paths) as file:
             for line in file.readlines():
-                if not line.startswith("seq_name"):
+                if not (line.startswith("seq_name") or line.startswith("#")):
                     strings = line.strip().split()
 
                     contig_name = strings[0]
