@@ -1,4 +1,4 @@
-seq_name	length	cov.	circ.	repeat	mult.	graph_path
+#seq_name	length	cov.	circ.	repeat	mult.	graph_path
 contig_1	374926	14	-	-	1	*,1,*
 contig_2	126602	13	-	-	1	*,2,*
 contig_3	138181	12	-	-	1	*,3,*
