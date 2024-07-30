@@ -765,7 +765,7 @@ def run(args):
         logger.info(
             contig_names[contig]
             + " belongs to bins "
-            + ", ".join(str(s + 1) for s in min_diff_combination)
+            + ", ".join(bins_list[s] for s in min_diff_combination)
         )
         for mybin in min_diff_combination:
             if contig not in bins[mybin]:
