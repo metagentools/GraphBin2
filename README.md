@@ -23,12 +23,12 @@ GraphBin2 is an extension of [GraphBin](https://github.com/Vini2/GraphBin) which
 
 **Note:** Due to recent requests from the community, we have added support for long-read assemblies produced from Flye. Please note that GraphBin2 has not been tested extensively on long-read assemblies. We originally developed GraphBin2 for short-read assemblies. Long-read assemblies might have sparsely connected graphs which can make the label propagation process less effective and may not result in improvements.
 
-**NEW:** GraphBin2 is now available on PyPI at [https://pypi.org/project/graphbin2/](https://pypi.org/project/graphbin2/) and Bioconda at [https://anaconda.org/bioconda/graphbin2](https://anaconda.org/bioconda/graphbin2).
+**NEW:** GraphBin2 is now available on Bioconda at [https://anaconda.org/bioconda/graphbin2](https://anaconda.org/bioconda/graphbin2) and on PyPI at [https://pypi.org/project/graphbin2/](https://pypi.org/project/graphbin2/).
 
 
 ## Installing GraphBin2
 
-### Using Conda
+### Using Conda (recommended)
 
 You can install GraphBin2 using the [bioconda](https://anaconda.org/bioconda/graphbin2) distribution. You can download 
 [Anaconda](https://www.anaconda.com/distribution/) or [Miniconda](https://docs.conda.io/en/latest/miniconda.html) which contains `conda`.
