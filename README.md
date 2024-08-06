@@ -8,9 +8,10 @@
 [![DOI](https://img.shields.io/badge/DOI-10.4230/LIPIcs.WABI.2020.8-informational)](https://doi.org/10.4230/LIPIcs.WABI.2020.8)
 [![DOI](https://img.shields.io/badge/DOI-10.1186/s13015--021--00185--6-yellow)](https://doi.org/10.1186/s13015-021-00185-6)
 [![DOI](https://zenodo.org/badge/262936904.svg)](https://zenodo.org/badge/latestdoi/262936904)
-
-[![CI](https://github.com/metagentools/GraphBin2/actions/workflows/testing.yml/badge.svg)](https://github.com/metagentools/GraphBin2/actions/workflows/testing.yml)
 ![GitHub](https://img.shields.io/github/license/Vini2/GraphBin2)
+[![PyPI version](https://badge.fury.io/py/graphbin2.svg)](https://badge.fury.io/py/graphbin2)
+[![Downloads](https://static.pepy.tech/badge/graphbin2)](https://pepy.tech/project/graphbin2)
+[![CI](https://github.com/metagentools/GraphBin2/actions/workflows/testing.yml/badge.svg)](https://github.com/metagentools/GraphBin2/actions/workflows/testing.yml)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![CodeQL](https://github.com/metagentools/GraphBin2/actions/workflows/codeql.yml/badge.svg)](https://github.com/metagentools/GraphBin2/actions/workflows/codeql.yml)
 [![Documentation Status](https://readthedocs.org/projects/graphbin2/badge/?version=latest)](https://graphbin2.readthedocs.io/en/latest/?badge=latest)
