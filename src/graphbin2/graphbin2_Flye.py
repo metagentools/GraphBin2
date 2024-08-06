@@ -11,8 +11,9 @@ import subprocess
 import sys
 import time
 
-from cogent3.parse.fasta import MinimalFastaParser
 from collections import defaultdict
+
+from cogent3.parse.fasta import MinimalFastaParser
 from igraph import *
 from tqdm import tqdm
 
@@ -50,30 +51,30 @@ def run(args):
     # Setup output path for log file
     # ---------------------------------------------------
 
-    fileHandler = logging.FileHandler(output_path + "/" + prefix + "graphbin2.log")
+    fileHandler = logging.FileHandler(f"{output_path}/{prefix}graphbin2.log")
     fileHandler.setLevel(logging.DEBUG)
     fileHandler.setFormatter(formatter)
     logger.addHandler(fileHandler)
 
     logger.info(
-        "Welcome to GraphBin2: Refined and Overlapped Binning of Metagenomic Contigs using Assembly Graphs."
+        f"Welcome to GraphBin2: Refined and Overlapped Binning of Metagenomic Contigs using Assembly Graphs."
     )
     logger.info(
-        "This version of GraphBin2 makes use of the assembly graph produced by metaFlye which is a long reads assembler based on the de Bruijn graph approach."
+        f"This version of GraphBin2 makes use of the assembly graph produced by metaFlye which is a long reads assembler based on the de Bruijn graph approach."
     )
 
-    logger.info("Input arguments:")
-    logger.info("Contigs file: " + contigs_file)
-    logger.info("Assembly graph file: " + assembly_graph_file)
-    logger.info("Contig paths file: " + contig_paths)
-    logger.info("Abundance file: " + abundance_file)
-    logger.info("Existing binning output file: " + contig_bins_file)
-    logger.info("Final binning output file: " + output_path)
-    logger.info("Depth: " + str(depth))
-    logger.info("Threshold: " + str(threshold))
-    logger.info("Number of threads: " + str(nthreads))
+    logger.info(f"Input arguments:")
+    logger.info(f"Contigs file: {contigs_file}")
+    logger.info(f"Assembly graph file: {assembly_graph_file}")
+    logger.info(f"Contig paths file: {contig_paths}")
+    logger.info(f"Abundance file: {abundance_file}")
+    logger.info(f"Existing binning output file: {contig_bins_file}")
+    logger.info(f"Final binning output file: {output_path}")
+    logger.info(f"Depth: {depth}")
+    logger.info(f"Threshold: {threshold}")
+    logger.info(f"Number of threads: {nthreads}")
 
-    logger.info("GraphBin2 started")
+    logger.info(f"GraphBin2 started")
 
     start_time = time.time()
 
@@ -231,9 +232,9 @@ def run(args):
     except BaseException as err:
         logger.error(f"Unexpected {err}")
         logger.error(
-            "Please make sure that the correct path to the assembly graph file is provided."
+            f"Please make sure that the correct path to the assembly graph file is provided."
         )
-        logger.info("Exiting GraphBin2... Bye...!")
+        logger.info(f"Exiting GraphBin2... Bye...!")
         sys.exit(1)
 
     logger.info(f"Total number of contigs available: {node_count}")
@@ -260,12 +261,12 @@ def run(args):
     except BaseException as err:
         logger.error(f"Unexpected {err}")
         logger.error(
-            "Please make sure that the correct path to the assembly graph file is provided."
+            f"Please make sure that the correct path to the assembly graph file is provided."
         )
-        logger.info("Exiting GraphBin2... Bye...!")
+        logger.info(f"Exiting GraphBin2... Bye...!")
         sys.exit(1)
 
-    logger.info("Total number of edges in the assembly graph: " + str(len(edge_list)))
+    logger.info(f"Total number of edges in the assembly graph: {len(edge_list)}")
 
     # Get the number of bins from the initial binning result
     # --------------------------------------------------------
@@ -282,14 +283,14 @@ def run(args):
         bins_list.sort()
 
         n_bins = len(bins_list)
-        logger.info("Number of bins available in binning result: " + str(n_bins))
+        logger.info(f"Number of bins available in binning result: {n_bins}")
 
     except BaseException as err:
         logger.error(f"Unexpected {err}")
         logger.error(
-            "Please make sure that the correct path to the binning result file is provided and it is having the correct format"
+            f"Please make sure that the correct path to the binning result file is provided and it is having the correct format"
         )
-        logger.info("Exiting GraphBin2... Bye...!")
+        logger.info(f"Exiting GraphBin2... Bye...!")
         sys.exit(1)
 
     # Get initial binning result
@@ -312,9 +313,9 @@ def run(args):
     except BaseException as err:
         logger.error(f"Unexpected {err}")
         logger.error(
-            "Please make sure that you have provided the correct assembler type and the correct path to the binning result file in the correct format."
+            f"Please make sure that you have provided the correct assembler type and the correct path to the binning result file in the correct format."
         )
-        logger.info("Exiting GraphBin2... Bye...!")
+        logger.info(f"Exiting GraphBin2... Bye...!")
         sys.exit(1)
 
     # Get binned and unbinned contigs
@@ -334,8 +335,8 @@ def run(args):
     binned_contigs.sort()
     unbinned_contigs.sort()
 
-    logger.info("No. of binned contigs: " + str(len(binned_contigs)))
-    logger.info("No. of unbinned contigs: " + str(len(unbinned_contigs)))
+    logger.info(f"No. of binned contigs: {len(binned_contigs)}")
+    logger.info(f"No. of unbinned contigs: {len(unbinned_contigs)}")
 
     # Get isolated vertices
     # -----------------------------------------------------
@@ -397,12 +398,12 @@ def run(args):
     # Remove labels of unsupported vertices
     # -----------------------------------------------------
 
-    logger.info("Removing labels of unsupported vertices")
+    logger.info(f"Removing labels of unsupported vertices")
 
     iter_num = 1
 
     while True:
-        logger.debug("Iteration: " + str(iter_num))
+        logger.debug(f"Iteration: {iter_num}")
 
         remove_labels = {}
 
@@ -476,14 +477,14 @@ def run(args):
     # Refine labels of inconsistent vertices
     # -----------------------------------------------------
 
-    logger.info("Refining labels of inconsistent vertices")
+    logger.info(f"Refining labels of inconsistent vertices")
 
     iter_num = 1
 
     once_moved = []
 
     while True:
-        logger.debug("Iteration: " + str(iter_num))
+        logger.debug(f"Iteration: {iter_num}")
 
         contigs_to_correct = {}
 
@@ -567,7 +568,7 @@ def run(args):
 
     # Get non isolated contigs
 
-    logger.info("Obtaining non isolated contigs")
+    logger.info(f"Obtaining non isolated contigs")
 
     # Initialise progress bar
     pbar = tqdm(total=node_count)
@@ -614,18 +615,18 @@ def run(args):
     # Close progress bar
     pbar.close()
 
-    logger.info("Number of non-isolated contigs: " + str(len(non_isolated)))
+    logger.info(f"Number of non-isolated contigs: {len(non_isolated)}")
 
     non_isolated_unbinned = list(set(non_isolated).intersection(set(unbinned_contigs)))
 
     logger.info(
-        "Number of non-isolated unbinned contigs: " + str(len(non_isolated_unbinned))
+        f"Number of non-isolated unbinned contigs: {len(non_isolated_unbinned)}"
     )
 
     # Propagate labels to unlabelled vertices
     # -----------------------------------------------------
 
-    logger.info("Propagating labels to unlabelled vertices")
+    logger.info(f"Propagating labels to unlabelled vertices")
 
     # Initialise progress bar
     pbar = tqdm(total=len(non_isolated_unbinned))
@@ -691,7 +692,7 @@ def run(args):
     # Determine contigs belonging to multiple bins
     # -----------------------------------------------------
 
-    logger.info("Determining multi-binned contigs")
+    logger.info(f"Determining multi-binned contigs")
 
     bin_cov_sum = [0 for x in range(n_bins)]
     bin_contig_len_total = [0 for x in range(n_bins)]
@@ -763,9 +764,9 @@ def run(args):
     multi_bins = list(filter(lambda x: x is not None, mapped))
 
     if len(multi_bins) == 0:
-        logger.info("No multi-labelled contigs were found")
+        logger.info(f"No multi-labelled contigs were found")
     else:
-        logger.info("Found " + str(len(multi_bins)) + " multi-labelled contigs ==>")
+        logger.info(f"Found {len(multi_bins)} multi-labelled contigs ==>")
 
     # Add contigs to multiplt bins
     for contig, min_diff_combination in multi_bins:
@@ -782,7 +783,7 @@ def run(args):
     elapsed_time = time.time() - start_time
 
     # Show elapsed time for the process
-    logger.info("Elapsed time: " + str(elapsed_time) + " seconds")
+    logger.info(f"Elapsed time: {elapsed_time} seconds")
 
     # Sort contigs in bins
     for i in range(n_bins):
@@ -791,7 +792,7 @@ def run(args):
     # Write result to output file
     # -----------------------------------
 
-    logger.info("Writing the final binning results to file")
+    logger.info(f"Writing the final binning results to file")
 
     output_bins = []
 
@@ -831,7 +832,7 @@ def run(args):
                 line.append(bins_list[k])
                 output_bins.append(line)
 
-    output_file = output_path + prefix + "graphbin2_output.csv"
+    output_file = f"{output_path}{prefix}graphbin2_output.csv"
 
     with open(output_file, mode="w") as output_file:
         output_writer = csv.writer(
@@ -841,12 +842,12 @@ def run(args):
         for row in output_bins:
             output_writer.writerow(row)
 
-    logger.info("Final binning results can be found at " + str(output_file.name))
+    logger.info(f"Final binning results can be found at {output_file.name}")
 
     # Exit program
     # -----------------------------------
 
-    logger.info("Thank you for using GraphBin2!")
+    logger.info(f"Thank you for using GraphBin2!")
 
 
 def is_multi(
