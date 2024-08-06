@@ -26,7 +26,7 @@ GraphBin2 is an extension of [GraphBin](https://github.com/Vini2/GraphBin) which
 
 ## Installing GraphBin2
 
-### Using Conda
+<!-- ### Using Conda
 
 You can install GraphBin2 using the [bioconda](https://anaconda.org/bioconda/graphbin2) distribution. You can download 
 [Anaconda](https://www.anaconda.com/distribution/) or [Miniconda](https://docs.conda.io/en/latest/miniconda.html) which contains `conda`.
@@ -45,7 +45,7 @@ conda activate graphbin2
 
 # check graphbin2 installation
 graphbin2 --help
-```
+``` -->
 
 ### Using pip
 
