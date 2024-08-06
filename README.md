@@ -23,58 +23,75 @@ GraphBin2 is an extension of [GraphBin](https://github.com/Vini2/GraphBin) which
 
 **NEW:** GraphBin2 is now available on PyPI at [https://pypi.org/project/graphbin2/](https://pypi.org/project/graphbin2/).
 
-## Getting Started
 
-### Downloading GraphBin2
-You can download the latest release of GraphBin2 from [Releases](https://github.com/Vini2/GraphBin2/releases) or clone the GraphBin2 repository to your machine.
+## Installing GraphBin2
 
-```bash
-git clone https://github.com/Vini2/GraphBin2.git
-```
+### Using Conda
 
-If you have downloaded a release, you will have to extract the files using the following command.
+You can install GraphBin2 using the [bioconda](https://anaconda.org/bioconda/graphbin2) distribution. You can download 
+[Anaconda](https://www.anaconda.com/distribution/) or [Miniconda](https://docs.conda.io/en/latest/miniconda.html) which contains `conda`.
 
-```bash
-unzip [file_name].zip
-```
+```shell
+# add channels
+conda config --add channels defaults
+conda config --add channels bioconda
+conda config --add channels conda-forge
 
-Now go in to the GraphBin2 folder using the command
+# create conda environment and install
+conda create -n graphbin2 graphbin2
 
-```bash
-cd GraphBin2/
-```
-
-### Setting up the environment
-
-We recommend that you use [Conda](https://docs.conda.io/en/latest/) to run GraphBin2. You can download [Anaconda](https://www.anaconda.com/distribution/) or [Miniconda](https://docs.conda.io/en/latest/miniconda.html) which contains Conda.
-
-Once you have installed Conda, make sure you are in the GraphBin2 folder. Now run the following commands to create a Conda environment and activate it to run GraphBin2.
-
-```bash
-conda env create -f environment.yml
+# activate conda environment
 conda activate graphbin2
+
+# check graphbin2 installation
+graphbin2 --help
 ```
 
-Now install GraphBin2 using the following command.
+### Using pip
 
-```bash
-flit install
+You can install GraphBin2 using `pip` from the [PyPI](https://pypi.org/project/graphbin2/) distribution.
+
+```shell
+# install graphbin2
+pip install graphbin
+
+# check graphbin2 installation
+graphbin2 --help
 ```
 
-### Test the setup
+For ***development*** purposes, please clone the repository and install via [flit](https://pypi.org/project/flit/).
 
-After installing, run the following command to ensure that GraphBin2 is working.
+```shell
+# clone repository to your local machine
+git clone https://github.com/metagentools/GraphBin2.git
 
-```bash
-graphbin2 -h
+# go to repo directory
+cd GraphBin2
+
+# install flit
+pip install flit
+
+# install graphbin2 via flit
+flit install -s --python `which python`
 ```
 
-Now you are ready to run GraphBin2.
+## Example Usage
+
+```shell
+# SPAdes version
+graphbin2 --assembler spades --graph /path/to/graph_file.gfa --contigs /path/to/contigs.fasta --paths /path/to/paths_file.paths --binned /path/to/binning_result.csv --abundance /path/to/abundance.tsv --output /path/to/output_folder
+
+# SGA version
+graphbin2 --assembler sga --graph /path/to/graph_file.asqg --contigs /path/to/contigs.fa --binned /path/to/binning_result.csv --abundance /path/to/abundance.tsv --output /path/to/output_folder
+
+# metaFlye version
+graphbin2 --assembler flye --graph /path/to/graph_file.gfa --contigs /path/to/assembly.fasta --paths /path/to/assembly_info.txt --binned /path/to/binning_result.csv --abundance /path/to/abundance.tsv --output /path/to/output_folder
+```
 
 
 ## Citation
 
-GraphBin2 was accepted for publication at the 20th International Workshop on Algorithms in Bioinformatics ([WABI 2020](http://algo2020.di.unipi.it/WABI2020/)) and is published in [Leibniz International Proceedings in Informatics (LIPIcs)](https://www.dagstuhl.de/dagpub/978-3-95977-161-0) DOI: [10.4230/LIPIcs.WABI.2020.8](https://doi.org/10.4230/LIPIcs.WABI.2020.8). 
+GraphBin2 was accepted for presentation at the 20th International Workshop on Algorithms in Bioinformatics ([WABI 2020](http://algo2020.di.unipi.it/WABI2020/)) and is published in [Leibniz International Proceedings in Informatics (LIPIcs)](https://www.dagstuhl.de/dagpub/978-3-95977-161-0) DOI: [10.4230/LIPIcs.WABI.2020.8](https://doi.org/10.4230/LIPIcs.WABI.2020.8). 
 
 An extended journal article of GraphBin2 has been published in BMC Algorithms for Molecular Biology at DOI: [10.1186/s13015-021-00185-6](https://doi.org/10.1186/s13015-021-00185-6).
 
