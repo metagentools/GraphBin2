@@ -2,7 +2,7 @@
 
 You can see the usage options of GraphBin2 by typing `./graphbin2 -h` on the command line. For example,
 
-```
+```shell
 Usage: graphbin2 [OPTIONS]
 
   GraphBin2: Refined and Overlapped Binning of Metagenomic Contigs Using
@@ -66,15 +66,15 @@ The Flye version of `graphbin2` takes in 4 files as inputs (required).
 
 ## Example Usage
 
-```
+```shell
 # metaSPAdes assembly
 graphbin2 --assembler spades --contigs /path/to/contigs.fasta --paths /path/to/paths_file.paths --graph /path/to/graph_file.gfa  --binned /path/to/binning_result.csv --abundance /path/to/abundance.tsv --output /path/to/output_folder
 ```
-```
+```shell
 # SGA assembly
 graphbin2 --assembler sga --contigs /path/to/contigs.fa --graph /path/to/graph_file.asqg --binned /path/to/binning_result.csv --abundance /path/to/abundance.tsv --output /path/to/output_folder
 ```
-```
+```shell
 # metaFlye assembly
 graphbin2 --assembler flye --contigs /path/to/assembly.fasta --paths /path/to/assembly_info.txt --graph /path/to/graph_file.gfa --binned /path/to/binning_result.csv --abundance /path/to/abundance.tsv --output /path/to/output_folder
 ```

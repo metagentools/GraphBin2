@@ -7,14 +7,14 @@ Firstly, you will have to assemble your set of reads into contigs. For this purp
 ### metaSPAdes
 [**SPAdes**](http://cab.spbu.ru/software/spades/) is a short-read assembler based on the de Bruijn graph approach. [**metaSPAdes**](https://genome.cshlp.org/content/27/5/824) is the dedicated metagenomic assembler of SPAdes. Use metaSPAdes (SPAdes in metagenomics mode) software to assemble short reads into contigs. A sample command is given below.
 
-```
+```shell
 spades --meta -1 Reads_1.fastq -2 Reads_2.fastq -o /path/output_folder -t 16
 ```
 
 ### SGA
 [**SGA**](https://github.com/jts/sga) (String Graph Assembler) is a short-read assembler based on the overlap-layout-consensus (more recently string graph) approach. Use SGA software to assemble short reads into contigs. Sample commands are given below. You may change the parameters to suit your datasets.
 
-```
+```shell
 sga preprocess -o reads.fastq --pe-mode 1 Reads_1.fastq Reads_2.fastq
 sga index -a ropebwt -t 16 --no-reverse reads.fastq
 sga correct -k 41 --learn -t 16 -o reads.k41.fastq reads.fastq
@@ -29,7 +29,7 @@ sga assemble -m 95 reads.k41.filter.pass.merged.asqg.gz
 ### metaFlye
 [**Flye**](https://github.com/fenderglass/Flye) is a long-read assembler based on the de Bruijn graph approach. [**metaFlye**](https://www.nature.com/articles/s41592-020-00971-x) is the dedicated metagenomic assembler of Flye. Use metaFlye (Flye in metagenomics mode) software to assemble long reads into contigs. A sample command is given below.
 
-```
+```shell
 flye --meta --pacbio-raw reads.fasta --genome-size estimated_metagenome_size --out-dir /path/output_folder --threads 16
 ```
 
@@ -39,13 +39,13 @@ Next, you have to bin the resulting contigs using an existing contig-binning too
 
 ### [MaxBin2](https://sourceforge.net/projects/maxbin2/)
 
-```
+```shell
 perl MaxBin-2.2.5/run_MaxBin.pl -contig contigs.fasta -abund abundance.abund -thread 8 -out /path/output_folder
 ```
 
 ### [SolidBin](https://github.com/sufforest/SolidBin)
 
-```
+```shell
 python scripts/gen_kmer.py /path/to/data/contig.fasta 1000 4 
 sh gen_cov.sh 
 python SolidBin.py --contig_file /path/to/contigs.fasta --composition_profiles /path/to/kmer_4.csv --coverage_profiles /path/to/cov_inputtableR.tsv --output /output/result.tsv --log /output/log.txt --use_sfs
@@ -89,7 +89,7 @@ contig_5,2
 
 You can use [CoverM](https://github.com/wwood/CoverM) to get the coverage of contigs. You can run the following commands to get the `abundance.tsv` file. Please make sure that there are **no headers** in the `abundance.tsv` file.
 
-```
+```shell
 coverm contig -1 reads_1.fastq -2 reads_2.fastq -r contigs.fasta -o abundance.tsv -t 8
 sed -i '1d' abundance.tsv   # remove the header of the file
 ```

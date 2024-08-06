@@ -4,12 +4,12 @@
 
 `prepResult` is a support comamnd that allows you to format an initial binning result in to the .csv format with contig identifiers and bin ID. Contigs are named according to their original identifier and bins are numbered starting from 1. You can run [`prepResult`](https://github.com/Vini2/GraphBin2/blob/master/src/graphbin2/support/prepResult.py) as follows.
 
-```
+```shell
 prepResult --binned /path/to/folder_with_binning_result --output /path/to/output_folder
 ```
 You can see the usage options of `prepResult` by typing `prepResult -h` on the command line.
 
-```
+```shell
 usage: prepResult    [-h] --binned BINNED --output OUTPUT
                      [--delimiter DELIMITER] [--prefix PREFIX]
 

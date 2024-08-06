@@ -1,48 +1,38 @@
-# Setting up GraphBin2
+# Installing GraphBin2
 
-## Downloading GraphBin2
+## Using Conda
 
-You can download the latest release of GraphBin2 from [Releases](https://github.com/Vini2/GraphBin2/releases) or clone the GraphBin2 repository to your machine.
+You can install GraphBin2 using the [bioconda](https://anaconda.org/bioconda/graphbin2) distribution. You can download 
+[Anaconda](https://www.anaconda.com/distribution/) or [Miniconda](https://docs.conda.io/en/latest/miniconda.html) which contains `conda`.
 
-```bash
-git clone https://github.com/Vini2/GraphBin2.git
-```
+```shell
+# add channels
+conda config --add channels defaults
+conda config --add channels bioconda
+conda config --add channels conda-forge
 
-If you have downloaded a release, you will have to extract the files using the following command.
+# create conda environment and install
+conda create -n graphbin2 graphbin2
 
-```bash
-unzip [file_name].zip
-```
-
-Now go in to the GraphBin2 folder using the command
-
-```bash
-cd GraphBin2/
-```
-
-## Setting up the environment
-
-We recommend that you use [Conda](https://docs.conda.io/en/latest/) to run GraphBin2. You can download [Anaconda](https://www.anaconda.com/distribution/) or [Miniconda](https://docs.conda.io/en/latest/miniconda.html) which contains Conda.
-
-Once you have installed Conda, make sure you are in the GraphBin2 folder. Now run the following commands to create a Conda environment and activate it to run GraphBin2.
-
-```bash
-conda env create -f environment.yml
+# activate conda environment
 conda activate graphbin2
 ```
 
-Now install GraphBin2 using the following command.
+## Using pip
 
-```bash
-flit install
+You can install GraphBin2 using `pip` from the [PyPI](https://pypi.org/project/graphbin2/) distribution.
+
+```shell
+# install graphbin2
+pip install graphbin2
 ```
 
 ## Test the setup
 
 After installing, run the following command to ensure that GraphBin2 is working.
 
-```bash
-graphbin2 -h
+```shell
+graphbin2 --help
 ```
 
 Now you are ready to run GraphBin2.
