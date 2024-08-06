@@ -53,7 +53,7 @@ You can install GraphBin2 using `pip` from the [PyPI](https://pypi.org/project/g
 
 ```shell
 # install graphbin2
-pip install graphbin
+pip install graphbin2
 
 # check graphbin2 installation
 graphbin2 --help
