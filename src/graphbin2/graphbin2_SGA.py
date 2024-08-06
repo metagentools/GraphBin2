@@ -5,11 +5,14 @@ import csv
 import heapq
 import itertools as it
 import logging
+import os
 import re
+import subprocess
 import sys
 import time
 
-from Bio import SeqIO
+from cogent3.parse.fasta import MinimalFastaParser
+from collections import defaultdict
 from igraph import *
 from tqdm import tqdm
 
@@ -76,11 +79,11 @@ def run(args):
 
     contig_lengths = {}
 
-    for index, record in enumerate(SeqIO.parse(contigs_file, "fasta")):
+    for label, seq in MinimalFastaParser(contigs_file):
         start_n = "contig-"
         end_n = ""
 
-        contig_num = int(re.search("%s(.*)%s" % (start_n, end_n), record.id).group(1))
+        contig_num = int(re.search("%s(.*)%s" % (start_n, end_n), label).group(1))
 
         length = len(record.seq)
         contig_lengths[contig_num] = length
@@ -152,6 +155,8 @@ def run(args):
 
     contigs_map = my_map
     contigs_map_rev = my_map.inverse
+
+    contig_names_rev = contig_names.inverse
 
     logger.info("Total number of contigs available: " + str(node_count))
 
@@ -731,14 +736,44 @@ def run(args):
     # Write result to output file
     # -----------------------------------
 
+    logger.info("Writing the final binning results to file")
+
     output_bins = []
+
+    final_bins = {}
+
+    for i in range(n_bins):
+        for contig in bins[i]:
+            final_bins[contig] = bins_list[i]
+
+    output_bins_path = f"{output_path}{prefix}bins/"
+
+    if not os.path.isdir(output_bins_path):
+        subprocess.run(f"mkdir -p {output_bins_path}", shell=True)
+
+    bin_files = {}
+
+    for bin_num in range(n_bins):
+        bin_files[bins_list[bin_num]] = open(
+            f"{output_bins_path}{prefix}{bins_list[bin_num]}.fasta", "w+"
+        )
+
+    for label, seq in MinimalFastaParser(contigs_file):
+        contig_num = contig_names_rev[label]
+
+        if contig_num in final_bins:
+            bin_files[final_bins[contig_num]].write(f">{label}\n{seq}\n")
+
+    # Close output files
+    for bin_num in range(n_bins):
+        bin_files[bins_list[bin_num]].close()
 
     for i in range(node_count):
         for k in range(n_bins):
             if i in bins[k]:
                 line = []
                 line.append(contig_names[i])
-                line.append(k + 1)
+                line.append(bins_list[k])
                 output_bins.append(line)
 
     output_file = output_path + prefix + "graphbin2_output.csv"

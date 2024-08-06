@@ -18,7 +18,7 @@ classifiers=[
     "Topic :: Scientific/Engineering :: Bio-Informatics",
 ]
 dependencies=[
-    "biopython",
+    "cogent3",
     "python-igraph",
     "scipy",
     "tqdm",

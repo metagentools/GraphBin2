@@ -14,7 +14,7 @@ import re
 import subprocess
 import sys
 
-from Bio import SeqIO
+from cogent3.parse.fasta import MinimalFastaParser
 
 
 __author__ = "Vijini Mallawaarachchi, Anuradha Wickramarachchi, and Yu Lin"
@@ -162,10 +162,8 @@ def main():
             bin_line.append(str(i))
             bin_ids.append(bin_line)
 
-            for index, record in enumerate(
-                SeqIO.parse(contig_bins_folder + bin_file, "fasta")
-            ):
-                contig_name = str(record.id)
+            for label, seq in MinimalFastaParser(contigs_file):
+                contig_name = str(label)
 
                 line = []
 

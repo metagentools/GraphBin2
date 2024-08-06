@@ -5,13 +5,14 @@ import csv
 import heapq
 import itertools as it
 import logging
+import os
 import re
+import subprocess
 import sys
 import time
 
+from cogent3.parse.fasta import MinimalFastaParser
 from collections import defaultdict
-
-from Bio import SeqIO
 from igraph import *
 from tqdm import tqdm
 
@@ -790,7 +791,37 @@ def run(args):
     # Write result to output file
     # -----------------------------------
 
+    logger.info("Writing the final binning results to file")
+
     output_bins = []
+
+    final_bins = {}
+
+    for i in range(n_bins):
+        for contig in bins[i]:
+            final_bins[contig] = bins_list[i]
+
+    output_bins_path = f"{output_path}{prefix}bins/"
+
+    if not os.path.isdir(output_bins_path):
+        subprocess.run(f"mkdir -p {output_bins_path}", shell=True)
+
+    bin_files = {}
+
+    for bin_num in range(n_bins):
+        bin_files[bins_list[bin_num]] = open(
+            f"{output_bins_path}{prefix}{bins_list[bin_num]}.fasta", "w+"
+        )
+
+    for label, seq in MinimalFastaParser(contigs_file):
+        contig_num = contig_names_rev[label]
+
+        if contig_num in final_bins:
+            bin_files[final_bins[contig_num]].write(f">{label}\n{seq}\n")
+
+    # Close output files
+    for bin_num in range(n_bins):
+        bin_files[bins_list[bin_num]].close()
 
     for i in range(node_count):
         for k in range(n_bins):
