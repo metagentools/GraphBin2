@@ -7,7 +7,12 @@ import sys
 
 import click
 
-from graphbin2 import graphbin2_Flye, graphbin2_SGA, graphbin2_SPAdes, graphbin2_MEGAHIT
+from graphbin2 import (
+    graphbin2_Flye,
+    graphbin2_MEGAHIT,
+    graphbin2_SGA,
+    graphbin2_SPAdes,
+)
 
 
 __author__ = "Vijini Mallawaarachchi, Anuradha Wickramarachchi, and Yu Lin"
