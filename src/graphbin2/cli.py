@@ -57,7 +57,7 @@ class ArgsObj:
 @click.command()
 @click.option(
     "--assembler",
-    help="name of the assembler used. (Supports SPAdes, SGA and Flye)",
+    help="name of the assembler used. (Supports SPAdes, SGA, MEGAHIT and Flye)",
     type=click.Choice(["spades", "megahit", "sga", "flye"], case_sensitive=False),
     required=True,
 )
