@@ -63,7 +63,7 @@ def test_graphbin_on_spades_5g_dataset(tmp_dir):
 
 
 def test_graphbin_on_flye_1y3b_dataset(tmp_dir):
-    """test graphbin on spades assembly"""
+    """test graphbin on flye assembly"""
     dir_name = TEST_ROOTDIR / "data" / "1Y3B_Flye"
     graph = dir_name / "assembly_graph.gfa"
     contigs = dir_name / "assembly.fasta"
@@ -71,4 +71,15 @@ def test_graphbin_on_flye_1y3b_dataset(tmp_dir):
     abundance = dir_name / "abundance.tsv"
     binned = dir_name / "initial_binning_res.csv"
     cmd = f"graphbin2 --assembler flye --graph {graph} --contigs {contigs} --paths {paths} --abundance {abundance} --binned {binned} --output {tmp_dir}"
+    exec_command(cmd)
+
+
+def test_graphbin_on_megahit_esc_dataset(tmp_dir):
+    """test graphbin on megahit assembly"""
+    dir_name = TEST_ROOTDIR / "data" / "ESC_MEGAHIT"
+    graph = dir_name / "final.gfa"
+    contigs = dir_name / "final.contigs.fa"
+    binned = dir_name / "initial_binning_res.csv"
+    abundance = dir_name / "abundance.tsv"
+    cmd = f"graphbin2 --assembler megahit --graph {graph} --contigs {contigs} --abundance {abundance} --binned {binned} --output {tmp_dir}"
     exec_command(cmd)

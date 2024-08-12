@@ -50,3 +50,13 @@ def test_graphbin2_flye_run(runner, tmp_dir):
     args = f"--assembler flye --graph {graph} --contigs {contigs} --paths {paths} --binned {binned} --abundance {abundance} --output {outpath}".split()
     r = runner.invoke(main, args, catch_exceptions=False)
     assert r.exit_code == 0, r.output
+
+# def test_graphbin2_megahit_run(runner, tmp_dir):
+#     outpath = tmp_dir
+#     graph = DATADIR / "ESC_MEGAHIT" / "final.gfa"
+#     contigs = DATADIR / "ESC_MEGAHIT" / "final.contigs.gfa"
+#     binned = DATADIR / "ESC_MEGAHIT" / "initial_binning_res.csv"
+#     abundance = DATADIR / "ESC_MEGAHIT" / "abundance.tsv"
+#     args = f"--assembler megahit --graph {graph} --contigs {contigs} --binned {binned} --abundance {abundance} --output {outpath}".split()
+#     r = runner.invoke(main, args, catch_exceptions=False)
+#     assert r.exit_code == 0, r.output
