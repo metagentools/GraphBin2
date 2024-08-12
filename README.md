@@ -86,6 +86,9 @@ graphbin2 --assembler spades --graph /path/to/graph_file.gfa --contigs /path/to/
 # SGA version
 graphbin2 --assembler sga --graph /path/to/graph_file.asqg --contigs /path/to/contigs.fa --binned /path/to/binning_result.csv --abundance /path/to/abundance.tsv --output /path/to/output_folder
 
+# MEGAHIT version
+graphbin2 --assembler megahit --graph /path/to/final.gfa --contigs /path/to/final.contigs.fa --binned /path/to/binning_result.csv --abundance /path/to/abundance.tsv --output /path/to/output_folder
+
 # metaFlye version
 graphbin2 --assembler flye --graph /path/to/graph_file.gfa --contigs /path/to/assembly.fasta --paths /path/to/assembly_info.txt --binned /path/to/binning_result.csv --abundance /path/to/abundance.tsv --output /path/to/output_folder
 ```
