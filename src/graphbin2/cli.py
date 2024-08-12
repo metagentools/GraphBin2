@@ -7,7 +7,7 @@ import sys
 
 import click
 
-from graphbin2 import graphbin2_Flye, graphbin2_SGA, graphbin2_SPAdes
+from graphbin2 import graphbin2_Flye, graphbin2_SGA, graphbin2_SPAdes, graphbin2_MEGAHIT
 
 
 __author__ = "Vijini Mallawaarachchi, Anuradha Wickramarachchi, and Yu Lin"
@@ -53,7 +53,7 @@ class ArgsObj:
 @click.option(
     "--assembler",
     help="name of the assembler used. (Supports SPAdes, SGA and Flye)",
-    type=click.Choice(["spades", "sga", "flye"], case_sensitive=False),
+    type=click.Choice(["spades", "megahit", "sga", "flye"], case_sensitive=False),
     required=True,
 )
 @click.option(
@@ -234,6 +234,10 @@ def main(
         logger.info(
             "This version of GraphBin2 makes use of the assembly graph produced by SPAdes which is based on the de Bruijn graph approach."
         )
+    elif assembler.lower() == "megahit":
+        logger.info(
+            "This version of GraphBin2 makes use of the assembly graph produced by MEGAHIT which is based on the de Bruijn graph approach."
+        )
     elif assembler.lower() == "sga":
         logger.info(
             "This version of GraphBin2 makes use of the assembly graph produced by SGA which is based on the string graph approach."
@@ -275,6 +279,9 @@ def main(
     # ---------------------------------------------------
     if assembler.lower() == "spades":
         graphbin2_SPAdes.main(args)
+
+    elif assembler.lower() == "megahit":
+        graphbin2_MEGAHIT.main(args)
 
     elif assembler.lower() == "sga":
         graphbin2_SGA.main(args)
