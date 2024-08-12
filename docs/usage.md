@@ -13,28 +13,29 @@ Usage: graphbin2 [OPTIONS]
   contigs shared by multiple species.
 
 Options:
-  --assembler [spades|sga|flye]  name of the assembler used. (Supports SPAdes,
-                                 SGA and Flye)  [required]
-  --graph PATH                   path to the assembly graph file  [required]
-  --contigs PATH                 path to the contigs file  [required]
-  --paths PATH                   path to the contigs.paths (metaSPAdes) or
-                                 assembly.info (metaFlye) file
-  --abundance PATH               path to the abundance file  [required]
-  --binned PATH                  path to the .csv file with the initial
-                                 binning output from an existing toole
-                                 [required]
-  --output PATH                  path to the output folder  [required]
-  --prefix TEXT                  prefix for the output file
-  --depth INTEGER                maximum depth for the breadth-first-search.
-                                 [default: 5]
-  --threshold FLOAT              threshold for determining inconsistent
-                                 vertices.  [default: 1.5]
-  --delimiter [,|;|$'\t'|" "]    delimiter for output results. Supports a
-                                 comma (,), a semicolon (;), a tab ($'\t'), a
-                                 space (" ") and a pipe (|) .  [default: ,]
-  --nthreads INTEGER             number of threads to use.  [default: 8]
-  -v, --version                  Show the version and exit.
-  --help                         Show this message and exit.
+  --assembler [spades|megahit|sga|flye]
+                                  name of the assembler used. (Supports
+                                  SPAdes, SGA and Flye)  [required]
+  --graph PATH                    path to the assembly graph file  [required]
+  --contigs PATH                  path to the contigs file  [required]
+  --paths PATH                    path to the contigs.paths (metaSPAdes) or
+                                  assembly.info (metaFlye) file
+  --abundance PATH                path to the abundance file  [required]
+  --binned PATH                   path to the .csv file with the initial
+                                  binning output from an existing toole
+                                  [required]
+  --output PATH                   path to the output folder  [required]
+  --prefix TEXT                   prefix for the output file
+  --depth INTEGER                 maximum depth for the breadth-first-search.
+                                  [default: 5]
+  --threshold FLOAT               threshold for determining inconsistent
+                                  vertices.  [default: 1.5]
+  --delimiter [,|;|$'\t'|" "]     delimiter for output results. Supports a
+                                  comma (,), a semicolon (;), a tab ($'\t'), a
+                                  space (" ") and a pipe (|) .  [default: ,]
+  --nthreads INTEGER              number of threads to use.  [default: 8]
+  -v, --version                   Show the version and exit.
+  --help                          Show this message and exit.
 ```
 
 # Input Format
@@ -49,6 +50,12 @@ The SGA version of `graphbin2` takes in 4 files as inputs (required).
 * Contigs file (in `.fasta` format)
 * Abundance file (tab separated file with contig ID and coverage in each line)
 * Assembly graph file (in `.asqg` format)
+* Binning output from an existing tool (in `.csv` format)
+
+The MEGAHIT version of `graphbin2` takes in 4 files as inputs (required).
+* Contigs file (in `.fasta` format)
+* Abundance file (tab separated file with contig ID and coverage in each line)
+* Assembly graph file (in `.gfa` format)
 * Binning output from an existing tool (in `.csv` format)
 
 The Flye version of `graphbin2` takes in 4 files as inputs (required).
@@ -73,6 +80,10 @@ graphbin2 --assembler spades --contigs /path/to/contigs.fasta --paths /path/to/p
 ```shell
 # SGA assembly
 graphbin2 --assembler sga --contigs /path/to/contigs.fa --graph /path/to/graph_file.asqg --binned /path/to/binning_result.csv --abundance /path/to/abundance.tsv --output /path/to/output_folder
+```
+```shell
+# MEGAHIT version
+graphbin2 --assembler megahit --graph /path/to/final.gfa --contigs /path/to/final.contigs.fa --binned /path/to/binning_result.csv --abundance /path/to/abundance.tsv --output /path/to/output_folder
 ```
 ```shell
 # metaFlye assembly
