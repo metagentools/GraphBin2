@@ -8,6 +8,7 @@
 [![DOI](https://img.shields.io/badge/DOI-10.1186/s13015--021--00185--6-yellow)](https://doi.org/10.1186/s13015-021-00185-6)
 [![DOI](https://zenodo.org/badge/262936904.svg)](https://zenodo.org/badge/latestdoi/262936904)
 ![GitHub](https://img.shields.io/github/license/Vini2/GraphBin2)
+[![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat)](http://bioconda.github.io/recipes/graphbin2/README.html)
 [![PyPI version](https://badge.fury.io/py/graphbin2.svg)](https://badge.fury.io/py/graphbin2)
 [![Downloads](https://static.pepy.tech/badge/graphbin2)](https://pepy.tech/project/graphbin2)
 [![CI](https://github.com/metagentools/GraphBin2/actions/workflows/testing.yml/badge.svg)](https://github.com/metagentools/GraphBin2/actions/workflows/testing.yml)
