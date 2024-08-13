@@ -159,17 +159,17 @@ def main():
         if bin_file.lower().endswith((".fasta", ".fa", ".fna")):
             bin_line = []
             bin_line.append(str(bin_file))
-            bin_line.append(str(i))
+            bin_line.append(bin_file)
             bin_ids.append(bin_line)
 
-            for label, seq in MinimalFastaParser(contigs_file):
+            for label, seq in MinimalFastaParser(f"{contig_bins_folder}/{bin_file}"):
                 contig_name = str(label)
 
                 line = []
 
                 line.append(contig_name)
 
-                line.append(str(i))
+                line.append(bin_file)
                 contig_bins.append(line)
 
             i = i + 1
