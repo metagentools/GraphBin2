@@ -99,7 +99,11 @@ graphbin2 --assembler flye --graph /path/to/graph_file.gfa --contigs /path/to/as
 
 GraphBin2 was accepted for presentation at the 20th International Workshop on Algorithms in Bioinformatics ([WABI 2020](http://algo2020.di.unipi.it/WABI2020/)) and is published in [Leibniz International Proceedings in Informatics (LIPIcs)](https://www.dagstuhl.de/dagpub/978-3-95977-161-0) DOI: [10.4230/LIPIcs.WABI.2020.8](https://doi.org/10.4230/LIPIcs.WABI.2020.8). 
 
+> Vijini G. Mallawaarachchi, Anuradha S. Wickramarachchi, and Yu Lin. GraphBin2: Refined and Overlapped Binning of Metagenomic Contigs Using Assembly Graphs. In 20th International Workshop on Algorithms in Bioinformatics (WABI 2020). Leibniz International Proceedings in Informatics (LIPIcs), Volume 172, pp. 8:1-8:21, Schloss Dagstuhl – Leibniz-Zentrum für Informatik (2020). DOI: https://doi.org/10.4230/LIPIcs.WABI.2020.8
+
 An extended journal article of GraphBin2 has been published in BMC Algorithms for Molecular Biology at DOI: [10.1186/s13015-021-00185-6](https://doi.org/10.1186/s13015-021-00185-6).
+
+> Mallawaarachchi, V.G., Wickramarachchi, A.S. & Lin, Y. Improving metagenomic binning results with overlapped bins using assembly graphs. Algorithms Mol Biol 16, 3 (2021). https://doi.org/10.1186/s13015-021-00185-6
 
 If you use GraphBin2 in your work, please cite the following publications.
 
