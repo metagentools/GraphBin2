@@ -19,6 +19,13 @@ from tqdm import tqdm
 
 from .bidirectionalmap.bidirectionalmap import BidirectionalMap
 
+__author__ = "Vijini Mallawaarachchi, Anuradha Wickramarachchi, and Yu Lin"
+__copyright__ = "Copyright 2020, GraphBin2 Project"
+__license__ = "BSD"
+__version__ = "1.3.2"
+__maintainer__ = "Vijini Mallawaarachchi"
+__email__ = "viji.mallawaarachchi@gmail.com"
+__status__ = "Stable Release"
 
 def run(args):
     # Get arguments
@@ -40,7 +47,7 @@ def run(args):
 
     # Setup logger
     # -----------------------
-    logger = logging.getLogger("GraphBin2")
+    logger = logging.getLogger(f"GraphBin2 {__version__}")
     logger.setLevel(logging.DEBUG)
     formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
     consoleHeader = logging.StreamHandler()

@@ -173,7 +173,7 @@ def main(
 
     # Setup logger
     # -----------------------
-    logger = logging.getLogger("GraphBin2 1.2.0")
+    logger = logging.getLogger(f"GraphBin2 {__version__}")
     logger.setLevel(logging.DEBUG)
     formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
     consoleHeader = logging.StreamHandler()
