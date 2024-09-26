@@ -248,7 +248,7 @@ def run(args):
                     int(re.search("%s(.*)%s" % (start, end), row[0]).group(1))
                 ]
 
-                bin_num = int(row[1]) - 1
+                bin_num = bins_list.index(row[1])
                 bins[bin_num].append(contig_num)
 
         for i in range(n_bins):
